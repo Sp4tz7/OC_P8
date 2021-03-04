@@ -49,7 +49,7 @@ class UserType extends AbstractType
                 new CallbackTransformer(
                     function ($rolesArray) {
                         // transform the array to a string
-                        return count($rolesArray) ? $rolesArray[0] : null;
+                        return is_array($rolesArray) ? $rolesArray[0] : 'null';
                     },
                     function ($rolesString) {
                         // transform the string back to an array
