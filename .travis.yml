@@ -1,7 +1,6 @@
 language: php
 php:
-  - '5.5.9'
-  - '7.3'
+  - '7.2.5'
 
 script:
   - composer install
