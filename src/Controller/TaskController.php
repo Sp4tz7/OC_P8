@@ -31,7 +31,7 @@ class TaskController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-
+            $task->setCreatedBy($this->getUser());
             $em->persist($task);
             $em->flush();
 
