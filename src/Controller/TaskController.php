@@ -31,7 +31,7 @@ class TaskController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-
+            $task->setCreatedBy($this->getUser());
             $em->persist($task);
             $em->flush();
 
@@ -84,6 +84,11 @@ class TaskController extends AbstractController
      */
     public function deleteTaskAction(Task $task)
     {
+        if ($this->getUser() != $task->getCreatedBy()) {
+            $this->addFlash('error', 'Vous ne pouvez supprimer que vos propres tâches');
+
+            return $this->redirectToRoute('task_list');
+        }
         $em = $this->getDoctrine()->getManager();
         $em->remove($task);
         $em->flush();
