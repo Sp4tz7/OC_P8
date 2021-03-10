@@ -111,6 +111,9 @@
     "laminas/laminas-zendframework-bridge": {
         "version": "1.2.0"
     },
+    "liip/test-fixtures-bundle": {
+        "version": "1.11.2"
+    },
     "monolog/monolog": {
         "version": "2.2.0"
     },
