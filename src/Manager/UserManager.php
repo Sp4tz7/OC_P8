@@ -46,7 +46,11 @@ class UserManager
 
     public function hasRightToDelete(User $user, Task $task): bool
     {
-        if ('ROLE_ANONYMOUS' == $task->getCreatedBy()->getRoles()[0] && 'ROLE_ADMIN' == $user->getRoles()[0]) {
+        if ('ROLE_ANONYMOUS' == $user->getRoles()[0]) {
+            return false;
+        }
+
+        if ('ROLE_ADMIN' == $user->getRoles()[0] && 'ROLE_ANONYMOUS' == $task->getCreatedBy()->getRoles()[0]) {
             return true;
         }
 
