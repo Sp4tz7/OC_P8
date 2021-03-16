@@ -3,7 +3,7 @@
 namespace App\Tests\Controller;
 
 use App\DataFixtures\UserFixture;
-use App\Repository\UserRepository;
+use App\Repository\TaskRepository;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;

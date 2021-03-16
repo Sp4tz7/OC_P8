@@ -2,6 +2,7 @@
 
 namespace App\Manager;
 
+use App\Entity\Task;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -29,7 +30,7 @@ class UserManager
         $this->encoder = $passwordEncoder;
     }
 
-    public function createUser(string $username, string $email, string $password, array $roles = null) : User
+    public function createUser(string $username, string $email, string $password, array $roles = null): User
     {
         $user = new User();
         $user->setUsername($username);
@@ -41,5 +42,18 @@ class UserManager
         $this->manager->persist($user);
 
         return $user;
+    }
+
+    public function hasRightToDelete(User $user, Task $task): bool
+    {
+        if ('ROLE_ANONYMOUS' == $task->getCreatedBy()->getRoles()[0] && 'ROLE_ADMIN' == $user->getRoles()[0]) {
+            return true;
+        }
+
+        if ($user === $task->getCreatedBy()) {
+            return true;
+        }
+
+        return false;
     }
 }
