@@ -37,4 +37,19 @@ class DefaultControllerTest extends WebTestCase
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
     }
 
+    public function testAdminHasUserMenu()
+    {
+        $this->client->loginUser($this->admin);
+        $crawler = $this->client->request('GET', '/');
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->assertSelectorExists('#user_menu');
+    }
+
+    public function testUserHasNotUserMenu()
+    {
+        $this->client->loginUser($this->user);
+        $crawler = $this->client->request('GET', '/');
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->assertSelectorNotExists('#user_menu');
+    }
 }

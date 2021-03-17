@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Task;
 use App\Form\TaskType;
+use App\Manager\UserManager;
+use App\Repository\TaskRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,9 +16,25 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks", name="task_list")
      */
-    public function listAction()
+    public function listAction(TaskRepository $taskRepository, Request $request)
     {
-        return $this->render('task/list.html.twig', ['tasks' => $this->getDoctrine()->getRepository('App:Task')->findAll()]);
+        $status = $request->get('status');
+
+        switch ($status) {
+            case 'done':
+                $tasks = $taskRepository->findBy(['isDone' => true]);
+                break;
+            case 'todo':
+                $tasks = $taskRepository->findBy(['isDone' => false]);
+                break;
+            case 'mine':
+                $tasks = $taskRepository->findBy(['created_by' => $this->getUser()]);
+                break;
+            default:
+                $tasks = $taskRepository->findAll();
+        }
+
+        return $this->render('task/list.html.twig', ['tasks' => $tasks]);
     }
 
     /**
@@ -82,9 +100,9 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks/{id}/delete", name="task_delete")
      */
-    public function deleteTaskAction(Task $task)
+    public function deleteTaskAction(Task $task, UserManager $userManager)
     {
-        if ($this->getUser() != $task->getCreatedBy()) {
+        if (!$userManager->hasRightTodelete($this->getUser(), $task)) {
             $this->addFlash('error', 'Vous ne pouvez supprimer que vos propres tâches');
 
             return $this->redirectToRoute('task_list');

@@ -1,0 +1,124 @@
+/*!
+ * Start Bootstrap - Shop Homepage (http://startbootstrap.com/)
+ * Copyright 2013-2016 Start Bootstrap
+ * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap/blob/gh-pages/LICENSE)
+ */
+
+@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,700');
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  background-color: #2F303A;
+  font-family: Poppins, sans-serif;
+  font-size: 1rem;
+  color: white;
+  min-height: 100vh;
+  position: relative;
+}
+
+.btn-logout {
+  color: white;
+  background-color: #1762A7;
+  padding: .75rem 1.5rem;
+  border-radius: .5rem;
+  text-decoration: none;
+  font-size: .9rem;
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+
+main {
+  min-height: 90vh;
+  background-color: #b19dbd;
+  padding: 5em 0;
+}
+
+.main-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-grow: 1;
+}
+
+.main-section .covers-image {
+  width: 60vw;
+  margin-left: 2rem;
+  height: auto;
+  max-width: 600px;
+}
+
+a {
+  color: #b19dbd;
+}
+
+a:hover {
+  color: #b19dbd;
+}
+
+.text-small {
+  font-size: 0.7em;
+}
+.btn-logout:hover {
+  color: white;
+  background-color: #0f5474;
+}
+.bg-night {
+  background-color: #4b1064;
+}
+
+.text-purple
+{
+  color: #4b1064;
+}
+
+.btn-success {
+  background-color: #0e6662;
+  border-color: #0e6662;
+}
+.btn-success:hover {
+  background-color: #0bb7af;
+  border-color: #0bb7af;
+}
+
+.badge-warning {
+  color: #603b06;
+}
+
+table tr td {
+  font-size: 0.8em;
+}
+
+i {
+  margin: 5px;
+}
+footer {
+  height: 70px;
+  background-color: #202027;
+  font-size: 0.7rem;
+  position: absolute;
+  bottom: 0;
+}
+
+footer .container {
+  display: flex;
+  justify-content: space-between;
+}
+
+@media (max-width: 800px) {
+  .main-section {
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .main-section .covers-image {
+    margin-top: 2rem;
+    height: 30vh;
+    width: auto;
+  }
+}
