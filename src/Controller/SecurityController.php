@@ -43,4 +43,5 @@ class SecurityController extends AbstractController
     {
         // This code is never executed.
     }
+
 }

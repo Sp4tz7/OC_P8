@@ -71,6 +71,9 @@ class TaskControllerTest extends WebTestCase
         $this->assertSelectorNotExists('.fa-thumbs-down');
     }
 
+    /**
+     * @covers \App\Controller\TaskController::listAction
+     */
     public function testNoTodoTasksInDone()
     {
         $this->client->loginUser($this->user);
@@ -118,6 +121,9 @@ class TaskControllerTest extends WebTestCase
         $this->assertNotEquals($task->isDone(), $done);
     }
 
+    /**
+     * @covers \App\Controller\TaskController::createAction
+     */
     public function testTaskCreate()
     {
         $this->client->loginUser($this->user);
