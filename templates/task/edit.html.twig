@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ task.title }}{% endblock %}
+
+{% block body %}
+    <section class="main-section">
+        <div>
+            {% if task.isDone %}
+                <span class="badge badge-success pull-right"><i class="fa fa-thumbs-up"></i> Terminée</span>
+                {% else %}
+                <span class="badge badge-warning pull-right"><i class="fa fa-thumbs-up"></i> A faire</span>
+            {% endif %}
+
+            <h1 class="text-info mt-2">{{ task.title }}</h1>
+            <p>{{ task.content }}</p>
+            <p class="text-muted">{{ task.createdAt|date('d.m.Y') }} par {{ task.createdBy.username }}</p>
+        </div>
+        <div class="bg-night p-5 rounded">
+            {{ form_start(form, {'action' : path('task_edit', { 'id' : task.id })}) }}
+            {{ form_widget(form) }}
+            <button type="submit" class="btn btn-success pull-right">Modifier</button>
+            {{ form_end(form) }}
+            <p class="mt-3">
+                <a href="{{ path('task_list') }}" class="text-small"><i class="fa fa-chevron-left"></i> Retour à la
+                    liste des tâches</a>
+            </p>
+        </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+{% block title %}Liste des tâches{% endblock %}
+
+{% block body %}
+    <div class="row text-light">
+        <h1 class="text-purple"><i class="fas fa-clipboard-list"></i>Liste des
+            tâches {{ app.request.get('status') == 'done'?'terminée':'' or app.request.get('status') == 'todo'?'à faire':'' or app.request.get('status') == 'mine'?'personnelles':'' }}
+        </h1>
+        {% if tasks %}
+            <table class="table text-white table-striped table-dark table-hover">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Date</th>
+                    <th>Auteur</th>
+                    <th>Titre</th>
+                    <th>Contenu</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for task in tasks %}
+                    {% set color = 'warning' %}
+                    {% set status = 'thumbs-up text-success' %}
+                    {% set text = 'A faire' %}
+                    {% if task.isDone %}
+                        {% set color = 'success' %}
+                        {% set status = 'thumbs-down text-warning' %}
+                        {% set text = 'Terminée' %}
+                    {% endif %}
+                    <tr>
+                        <th scope="row">{{ loop.index }}</th>
+                        <td>{{ task.createdAt|date('d.m.Y') }}</td>
+                        <td>{{ task.createdBy.username }}</td>
+                        <td>{{ task.title }}</td>
+                        <td><p class="text-break">{{ task.content }}</p></td>
+                        <td><span class="badge badge-{{ color }}">{{ text }}</span></td>
+                        <td>
+                            <a href="{{ path('task_edit', {'id' : task.id}) }}"><i class="fa fa-edit text-info"></i></a>
+                            <a href="{{ path('task_toggle', {'id' : task.id}) }}"><i
+                                        class="fa fa-{{ status }} "></i></a>
+                            <a href="{{ path('task_delete', {'id' : task.id}) }}"><i
+                                        class="fa fa-trash text-danger"></i></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="row">
+                <div class="alert alert-warning" role="alert">
+                    Il n'y a pas encore de tâche enregistrée. <a href="{{ path('task_create') }}"
+                                                                 class="btn btn-warning pull-right">Créer une tâche</a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
