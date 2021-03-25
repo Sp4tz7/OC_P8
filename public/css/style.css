@@ -34,6 +34,15 @@ thead {
   font-size: 14px;
 }
 
+
+table tr td {
+  font-size: 0.8em;
+}
+
+i {
+  margin: 5px;
+}
+
 td:last-child {
   min-width: 100px;
 }
@@ -114,13 +123,6 @@ a:hover {
   color: #603b06;
 }
 
-table tr td {
-  font-size: 0.8em;
-}
-
-i {
-  margin: 5px;
-}
 
 footer {
   height: 70px;
