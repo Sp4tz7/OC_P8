@@ -43,14 +43,14 @@ class TaskControllerTest extends WebTestCase
 
     public function testRedirectToLoginIfNotLoggedIn()
     {
-        $this->client->request('GET', '/tasks');
+        $this->client->request('GET', '/tasks/all');
         $this->assertResponseRedirects('http://localhost/login');
     }
 
     public function testUserTaskListActionWithTasks()
     {
         $this->client->loginUser($this->user);
-        $this->client->request('GET', '/tasks');
+        $this->client->request('GET', '/tasks/all');
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
         $this->assertSelectorExists('tr');
     }
@@ -58,7 +58,7 @@ class TaskControllerTest extends WebTestCase
     public function testUserTaskListActionWithNoTasks()
     {
         $this->client->loginUser($this->userNoTask);
-        $this->client->request('GET', '/tasks?status=mine');
+        $this->client->request('GET', '/tasks/mine');
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
         $this->assertSelectorExists('.alert.alert-warning');
     }
@@ -66,7 +66,7 @@ class TaskControllerTest extends WebTestCase
     public function testNoDoneTasksInTodo()
     {
         $this->client->loginUser($this->user);
-        $this->client->request('GET', '/tasks?status=todo');
+        $this->client->request('GET', '/tasks/todo');
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
         $this->assertSelectorNotExists('.fa-thumbs-down');
     }
@@ -77,7 +77,7 @@ class TaskControllerTest extends WebTestCase
     public function testNoTodoTasksInDone()
     {
         $this->client->loginUser($this->user);
-        $this->client->request('GET', '/tasks?status=done');
+        $this->client->request('GET', '/tasks/done');
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
         $this->assertSelectorNotExists('.fa-thumbs-up');
     }
@@ -88,7 +88,7 @@ class TaskControllerTest extends WebTestCase
         $task = $this->tasksFromUserTwo;
         $this->client->request('GET', '/tasks/'.$task->getId().'/delete');
         $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
-        $this->assertResponseRedirects('/tasks');
+        $this->assertResponseRedirects('/tasks/all');
         $this->client->followRedirect();
         $this->assertSelectorExists('.alert.alert-danger');
     }
@@ -99,7 +99,7 @@ class TaskControllerTest extends WebTestCase
         $task = $this->tasksFromAnonymous;
         $this->client->request('GET', '/tasks/'.$task->getId().'/delete');
         $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
-        $this->assertResponseRedirects('/tasks');
+        $this->assertResponseRedirects('/tasks/all');
         $this->client->followRedirect();
         $this->assertSelectorExists('.alert.alert-success');
     }
@@ -134,7 +134,7 @@ class TaskControllerTest extends WebTestCase
             'task[content]' => 'Itaque officia sint voluptatibus perferendis officiis. Sit rerum deserunt quia eum et. Fugit animi nesciunt ad.',
         ]);
         $this->client->submit($form);
-        $this->assertResponseRedirects('/tasks');
+        $this->assertResponseRedirects('/tasks/all');
         $this->client->followRedirect();
         $this->assertSelectorExists('.alert.alert-success');
     }
@@ -150,7 +150,7 @@ class TaskControllerTest extends WebTestCase
             'task[content]' => 'Itaque officia sint voluptatibus perferendis officiis. Sit rerum deserunt quia eum et. Fugit animi nesciunt ad.',
         ]);
         $this->client->submit($form);
-        $this->assertResponseRedirects('/tasks');
+        $this->assertResponseRedirects('/tasks/all');
         $this->client->followRedirect();
         $this->assertSelectorExists('.alert.alert-success');
     }

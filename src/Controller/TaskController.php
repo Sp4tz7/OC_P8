@@ -14,9 +14,9 @@ use Symfony\Component\HttpFoundation\Request;
 class TaskController extends AbstractController
 {
     /**
-     * @Route("/tasks", name="task_list")
+     * @Route("/tasks/{status}", name="task_list", requirements={"status": "done|todo|mine|all"})
      */
-    public function listAction(TaskRepository $taskRepository, Request $request)
+    public function listAction(TaskRepository $taskRepository, Request $request, $status)
     {
         $status = $request->get('status');
 
@@ -55,7 +55,7 @@ class TaskController extends AbstractController
 
             $this->addFlash('success', 'La tâche a été bien été ajoutée.');
 
-            return $this->redirectToRoute('task_list');
+            return $this->redirectToRoute('task_list', ['status' => 'all']);
         }
 
         return $this->render('task/create.html.twig', ['form' => $form->createView()]);
@@ -75,7 +75,7 @@ class TaskController extends AbstractController
 
             $this->addFlash('success', 'La tâche a bien été modifiée.');
 
-            return $this->redirectToRoute('task_list');
+            return $this->redirectToRoute('task_list', ['status' => 'all']);
         }
 
         return $this->render('task/edit.html.twig', [
@@ -94,7 +94,7 @@ class TaskController extends AbstractController
 
         $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
 
-        return $this->redirectToRoute('task_list');
+        return $this->redirectToRoute('task_list', ['status' => 'all']);
     }
 
     /**
@@ -105,7 +105,7 @@ class TaskController extends AbstractController
         if (!$userManager->hasRightTodelete($this->getUser(), $task)) {
             $this->addFlash('error', 'Vous ne pouvez supprimer que vos propres tâches');
 
-            return $this->redirectToRoute('task_list');
+            return $this->redirectToRoute('task_list', ['status' => 'all']);
         }
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->remove($task);
@@ -113,6 +113,6 @@ class TaskController extends AbstractController
 
         $this->addFlash('success', 'La tâche a bien été supprimée.');
 
-        return $this->redirectToRoute('task_list');
+        return $this->redirectToRoute('task_list', ['status' => 'all']);
     }
 }
