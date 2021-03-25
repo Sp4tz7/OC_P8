@@ -4,3 +4,4 @@ php:
 
 script:
   - composer install
+  - bin/phpunit

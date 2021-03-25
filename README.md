@@ -1,6 +1,6 @@
 # OC_P8
 
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/6ef62ab4781a48b093f7eedc6be51602)](https://www.codacy.com/gh/Sp4tz7/OC_P8/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Sp4tz7/OC_P8&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/6ef62ab4781a48b093f7eedc6be51602)](https://www.codacy.com/gh/Sp4tz7/OC_P8/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Sp4tz7/OC_P8&amp;utm_campaign=Badge_Grade) [![Build Status](https://travis-ci.com/Sp4tz7/OC_P8.svg?branch=main)](https://travis-ci.com/Sp4tz7/OC_P8)
 
 This project is part of the 8th course of my OpenClassRooms course
 
