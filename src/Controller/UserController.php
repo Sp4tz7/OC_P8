@@ -35,12 +35,12 @@ class UserController extends AbstractController
 
             //$oldAvatar = $user->getAvatar();
             //$avatarFile = $form['avatar']->getData();
-            $em = $this->getDoctrine()->getManager();
+            $entityManager = $this->getDoctrine()->getManager();
             $password = $encoder->encodePassword($user, $user->getPassword());
             $user->setPassword($password);
             $user->setRoles($form->get('roles')->getData());
-            $em->persist($user);
-            $em->flush();
+            $entityManager->persist($user);
+            $entityManager->flush();
 
             $this->addFlash('success', "L'utilisateur a bien été ajouté.");
 
