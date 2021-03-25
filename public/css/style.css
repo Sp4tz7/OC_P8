@@ -6,14 +6,16 @@
 
 @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,700');
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
 body {
   padding: 0;
   margin: 0;
-  background-color: #2F303A;
+  background-color: #2f303a;
   font-family: Poppins, sans-serif;
   font-size: 1rem;
   color: white;
@@ -23,11 +25,11 @@ body {
 
 .btn-logout {
   color: white;
-  background-color: #1762A7;
+  background-color: #1762a7;
   padding: .75rem 1.5rem;
-  border-radius: .5rem;
+  border-radius: 0.5rem;
   text-decoration: none;
-  font-size: .9rem;
+  font-size: 0.9rem;
   outline: none;
   border: none;
   cursor: pointer;
@@ -64,16 +66,17 @@ a:hover {
 .text-small {
   font-size: 0.7em;
 }
+
 .btn-logout:hover {
   color: white;
   background-color: #0f5474;
 }
+
 .bg-night {
   background-color: #4b1064;
 }
 
-.text-purple
-{
+.text-purple {
   color: #4b1064;
 }
 
@@ -81,6 +84,7 @@ a:hover {
   background-color: #0e6662;
   border-color: #0e6662;
 }
+
 .btn-success:hover {
   background-color: #0bb7af;
   border-color: #0bb7af;
@@ -97,6 +101,7 @@ table tr td {
 i {
   margin: 5px;
 }
+
 footer {
   height: 70px;
   background-color: #202027;
