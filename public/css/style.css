@@ -23,6 +23,25 @@ body {
   position: relative;
 }
 
+h1 {
+  font-size: 1.5em;
+  color: #0f5474;
+}
+
+thead {
+  background-color: #1762a7;
+  color: #fff;
+  font-size: 14px;
+}
+
+td:last-child {
+  min-width: 100px;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: #7aa7e40d;
+}
+
 .btn-logout {
   color: white;
   background-color: #1762a7;
@@ -37,7 +56,7 @@ body {
 
 main {
   min-height: 90vh;
-  background-color: #b19dbd;
+  background-color: #fff;
   padding: 5em 0;
 }
 
@@ -56,11 +75,11 @@ main {
 }
 
 a {
-  color: #b19dbd;
+  color: #e2e2e5;
 }
 
 a:hover {
-  color: #b19dbd;
+  color: #fff;
 }
 
 .text-small {
@@ -73,7 +92,8 @@ a:hover {
 }
 
 .bg-night {
-  background-color: #4b1064;
+  background-color: #2d6497;
+  border: 2px solid #0f5474;
 }
 
 .text-purple {

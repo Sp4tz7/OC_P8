@@ -3,14 +3,14 @@
 {% block title %}Liste des utilisateurs{% endblock %}
 
 {% block body %}
-    <h1 class="text-purple"><i class="fas fa-users"></i> Liste des utilisateurs</h1>
+    <h1 class="text-primary"><i class="fas fa-users"></i> Liste des utilisateurs</h1>
     {% if users|length == 0 %}
         <div class="alert alert-warning" role="alert">
             Il n'y a pas encore d'utilisateur enregistré. <a href="{{ path('user_create') }}" class="btn btn-warning pull-right">Créer un utilisateur</a>
         </div>
     {% else %}
         <div class="row">
-            <table class="table text-white table-striped table-dark table-hover">
+            <table class="table text-dark table-striped table-light table-hover">
             <thead>
                 <tr>
                     <th>#</th>
