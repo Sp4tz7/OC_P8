@@ -16,9 +16,22 @@ class TaskFixture extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager)
     {
         $this->faker = Factory::create();
+        // at least 1 task for each user
+        for ($i = 1; $i <= 5; $i++) {
+            $task = new Task();
+            $task->toggle($this->faker->boolean(50));
+            $task->setTitle($this->faker->text(40));
+            $task->setCreatedAt($this->faker->dateTimeBetween("-2 years", "now"));
+            $task->setContent($this->faker->text(200));
+            $task->setCreatedBy($this->getReference(User::class.'_'.$i));
+
+            $manager->persist($task);
+        }
+
+        // randomly more tasks
         for ($i = 0; $i < 20; $i++) {
             $isAnonymous = $this->faker->boolean(40);
-            $task = new Task();
+            $task        = new Task();
             $task->toggle($this->faker->boolean(50));
             $task->setTitle($this->faker->text(40));
             $task->setCreatedAt($this->faker->dateTimeBetween("-2 years", "now"));
@@ -36,7 +49,7 @@ class TaskFixture extends Fixture implements DependentFixtureInterface
     public function getDependencies()
     {
         return [
-            UserFixture::class
+            UserFixture::class,
         ];
     }
 
