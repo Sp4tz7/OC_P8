@@ -3,11 +3,9 @@
 namespace App\Tests\Controller;
 
 use App\DataFixtures\UserFixture;
-use App\Repository\TaskRepository;
 use App\Repository\UserRepository;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpFoundation\Response;
 
 class UserControllerTest extends WebTestCase
 {

@@ -10,10 +10,12 @@
         </div>
     {% else %}
         <div class="row">
-            <table class="table text-dark table-striped table-light table-hover">
+            <table class="table text-dark table-striped table-light table-hover mb-5">
             <thead>
                 <tr>
                     <th>#</th>
+                    <th></th>
+                    <th>Nom</th>
                     <th>Nom d'utilisateur</th>
                     <th>Email</th>
                     <th>Privilèges</th>
@@ -23,15 +25,18 @@
                 </thead>
                 <tbody>
                 {% for user in users %}
+                    {% set avatar = user.avatar? user.avatar: 'default_avatar.png' %}
                     <tr>
-                        <th scope="row">{{ loop.index }}</th>
+                        <th scope="row">{{ user.id }}</th>
+                        <td><img class="img rounded-circle" src="{{ absolute_url(asset(avatar_img_url~ avatar )) |imagine_filter('avatar_thumb') }}"/> </td>
+                        <td>{{ user }}</td>
                         <td>{{ user.username }}</td>
                         <td>{{ user.email }}</td>
                         <td>{{ user.roles[0] }}</td>
                         <td>{{ user.tasks|length }}</td>
                         <td>
                             <a href="{{ path('user_edit', {'id' : user.id}) }}"><i class="fa fa-edit text-info"></i></a>
-{#                            <a href="{{ path('user_delete', {'id' : user.id}) }}"><i class="fa fa-trash text-danger"></i></a>#}
+                            <a href="{{ path('user_delete', {'id' : user.id}) }}"><i class="fa fa-trash text-danger"></i></a>
                         </td>
                     </tr>
                 {% endfor %}

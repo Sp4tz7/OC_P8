@@ -30,8 +30,18 @@ class UserManager
         $this->encoder = $passwordEncoder;
     }
 
-    public function createUser(string $username, string $email, string $password, array $roles = null): User
-    {
+    public function createUser(
+        string $username,
+        string $email,
+        string $password,
+        array $roles = null,
+        string $firstname,
+        string $lastname,
+        $birthDate,
+        $mobileNumber,
+        string $occupation,
+        $avatar
+    ): User {
         $user = new User();
         $user->setUsername($username);
         $user->setEmail($email);
@@ -39,9 +49,30 @@ class UserManager
         if (null !== $roles) {
             $user->setRoles($roles);
         }
+        $user->setFirstname($firstname);
+        $user->setLastname($lastname);
+        $user->setDateOfBirth($this->formatBirthDate($birthDate));
+        $user->setMobileNumber($this->formatMobileNumber($mobileNumber));
+        $user->setOccupation($occupation);
+        $user->setAvatar($avatar);
         $this->manager->persist($user);
 
         return $user;
+    }
+
+    public function formatBirthDate($date)
+    {
+        $date = new \DateTime($date);
+
+        return $date;
+    }
+
+    public function formatMobileNumber($number)
+    {
+        // Allow only Digits, remove all other characters.
+        $number = preg_replace("/[^\d]/", "", $number);
+
+        return is_numeric($number) ? $number : null;
     }
 
     public function hasRightToDelete(User $user, Task $task): bool

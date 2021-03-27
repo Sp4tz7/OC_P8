@@ -8,84 +8,121 @@ use App\Manager\UserManager;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Liip\TestFixturesBundle\Test\FixturesTrait;
 
 class UserManagerTest extends TestCase
 {
-    public function testHasRightToDelete()
+    use FixturesTrait;
+
+    /**
+     * @var UserManager
+     */
+    private $anonymous;
+    private $user;
+    private $admin;
+    private $userManager;
+
+    public function setUp(): void
     {
         $manager = $this->getMockBuilder(EntityManagerInterface::class)->disableOriginalConstructor()->getMock();
         $encoder = $this->getMockBuilder(UserPasswordEncoderInterface::class)->disableOriginalConstructor()->getMock();
 
-        $userManager = new UserManager($manager, $encoder);
-        $user        = $userManager->createUser(
-            'UserOne',
-            'userone@todoandco.com',
-            'user1_todoandco',
-            ['ROLE_USER']
-        );
-        $admin       = $userManager->createUser(
-            'Admin',
-            'admin@todoandco.com',
-            'admin_todoandco',
-            ['ROLE_ADMIN']
-        );
-        $anonymous   = $userManager->createUser(
-            'Anonymous',
-            'anonymous@todoandco.com',
-            'anonymous_todoandco',
-            ['ROLE_ANONYMOUS']
-        );
+        $this->userManager = new UserManager($manager, $encoder);
+    }
+
+    public function testHasRightToDelete()
+    {
+        $admin = new User();
+        $admin->setRoles(['ROLE_ADMIN']);
+
+        $anonymous = new User();
+        $anonymous->setRoles(['ROLE_ANONYMOUS']);
+
+        $user = new User();
+        $user->setRoles(['ROLE_USER']);
 
         $task = new Task();
         $task->setCreatedBy($user);
+
         $this->assertSame(
             true,
-            $userManager->hasRightToDelete($user, $task),
+            $this->userManager->hasRightToDelete($user, $task),
             "User can delete user task"
         );
         $this->assertSame(
             false,
-            $userManager->hasRightToDelete($admin, $task),
+            $this->userManager->hasRightToDelete($admin, $task),
             "Admin can't delete user task"
         );
         $this->assertSame(
             false,
-            $userManager->hasRightToDelete($anonymous, $task),
+            $this->userManager->hasRightToDelete($anonymous, $task),
             "Anonymous can't delete user task"
         );
 
         $task->setCreatedBy($admin);
         $this->assertSame(
             false,
-            $userManager->hasRightToDelete($user, $task),
+            $this->userManager->hasRightToDelete($user, $task),
             "User can't delete admin task"
         );
         $this->assertSame(
             true,
-            $userManager->hasRightToDelete($admin, $task),
+            $this->userManager->hasRightToDelete($admin, $task),
             "Admin can delete admin task"
         );
         $this->assertSame(
             false,
-            $userManager->hasRightToDelete($anonymous, $task),
+            $this->userManager->hasRightToDelete($anonymous, $task),
             "Anonymous can't delete admin task"
         );
 
         $task->setCreatedBy($anonymous);
         $this->assertSame(
             false,
-            $userManager->hasRightToDelete($user, $task),
+            $this->userManager->hasRightToDelete($user, $task),
             "User can't delete Anonymous task"
         );
         $this->assertSame(
             true,
-            $userManager->hasRightToDelete($admin, $task),
+            $this->userManager->hasRightToDelete($admin, $task),
             "Admin can delete Anonymous task"
         );
         $this->assertSame(
             false,
-            $userManager->hasRightToDelete($anonymous, $task),
+            $this->userManager->hasRightToDelete($anonymous, $task),
             "Anonymous can't delete Anonymous task"
         );
+    }
+
+    public function testFormatMobileNumberReturnOnlyDigits()
+    {
+        $this->assertIsNumeric($this->userManager->formatMobileNumber('0041 79 654 87'));
+        $this->assertIsNumeric($this->userManager->formatMobileNumber('tel: 0041 79 654 87'));
+        $this->assertNull($this->userManager->formatMobileNumber('tel:'), 'Non numeric value should return null');
+    }
+
+    public function testFormatBirthDate()
+    {
+        $date = '2021-12-12';
+        $this->assertEquals(new \DateTime($date), $this->userManager->formatBirthDate($date));
+    }
+
+    public function testCreateUser()
+    {
+        $user = $this->userManager->createUser(
+            'Anonymous',
+            'anonymous@todoandco.com',
+            'anonymous_todoandco',
+            ['ROLE_ANONYMOUS'],
+            'Anon',
+            'Imous',
+            '25-12-2552',
+            '098765213251',
+            'Director',
+            null
+        );
+
+        $this->assertInstanceOf(User::class, $user);
     }
 }
