@@ -42,7 +42,7 @@ class Task
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="tasks")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true, referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
     private $created_by;
 

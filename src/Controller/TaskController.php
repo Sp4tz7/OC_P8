@@ -4,6 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Task;
 use App\Form\TaskType;
+use App\Manager\UserManager;
+use App\Repository\TaskRepository;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -12,11 +15,36 @@ use Symfony\Component\HttpFoundation\Request;
 class TaskController extends AbstractController
 {
     /**
-     * @Route("/tasks", name="task_list")
+     * @Route("/tasks/{status}", name="task_list", requirements={"status": "done|todo|mine|all"})
      */
-    public function listAction()
+    public function listAction(TaskRepository $taskRepository, UserRepository $userRepository, $status)
     {
-        return $this->render('task/list.html.twig', ['tasks' => $this->getDoctrine()->getRepository('App:Task')->findAll()]);
+        switch ($status) {
+            case 'done':
+                $tasks = $taskRepository->findBy(['isDone' => true]);
+                break;
+            case 'todo':
+                $tasks = $taskRepository->findBy(['isDone' => false]);
+                break;
+            case 'mine':
+                $tasks = $taskRepository->findBy(['created_by' => $this->getUser()]);
+                break;
+            default:
+                $tasks = $taskRepository->findAll();
+        }
+
+        // set non attributed tasks to anonymous
+        foreach ($tasks as $task) {
+            if (null === $task->getCreatedBy()) {
+                $entityManager = $this->getDoctrine()->getManager();
+                $userAnonnymous = $userRepository->findByRole('anonymous');
+                $task->setCreatedBy($userAnonnymous[0]);
+                $entityManager->persist($task);
+                $entityManager->flush();
+            }
+        }
+
+        return $this->render('task/list.html.twig', ['tasks' => $tasks]);
     }
 
     /**
@@ -30,14 +58,14 @@ class TaskController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+            $entityManager = $this->getDoctrine()->getManager();
             $task->setCreatedBy($this->getUser());
-            $em->persist($task);
-            $em->flush();
+            $entityManager->persist($task);
+            $entityManager->flush();
 
             $this->addFlash('success', 'La tâche a été bien été ajoutée.');
 
-            return $this->redirectToRoute('task_list');
+            return $this->redirectToRoute('task_list', ['status' => 'all']);
         }
 
         return $this->render('task/create.html.twig', ['form' => $form->createView()]);
@@ -57,7 +85,7 @@ class TaskController extends AbstractController
 
             $this->addFlash('success', 'La tâche a bien été modifiée.');
 
-            return $this->redirectToRoute('task_list');
+            return $this->redirectToRoute('task_list', ['status' => 'all']);
         }
 
         return $this->render('task/edit.html.twig', [
@@ -76,20 +104,25 @@ class TaskController extends AbstractController
 
         $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
 
-        return $this->redirectToRoute('task_list');
+        return $this->redirectToRoute('task_list', ['status' => 'all']);
     }
 
     /**
      * @Route("/tasks/{id}/delete", name="task_delete")
      */
-    public function deleteTaskAction(Task $task)
+    public function deleteTaskAction(Task $task, UserManager $userManager)
     {
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($task);
-        $em->flush();
+        if (!$userManager->hasRightToDeleteTask($this->getUser(), $task)) {
+            $this->addFlash('danger', 'Vous ne pouvez supprimer que vos propres tâches');
+
+            return $this->redirectToRoute('task_list', ['status' => 'all']);
+        }
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($task);
+        $entityManager->flush();
 
         $this->addFlash('success', 'La tâche a bien été supprimée.');
 
-        return $this->redirectToRoute('task_list');
+        return $this->redirectToRoute('task_list', ['status' => 'all']);
     }
 }

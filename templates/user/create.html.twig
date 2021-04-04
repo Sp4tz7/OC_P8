@@ -1,14 +1,17 @@
 {% extends 'base.html.twig' %}
-
-{% block header_title %}<h1>Créer un utilisateur</h1>{% endblock %}
-{% block header_img %}{% endblock %}
-
+{% block title %}Nouvel utilisateur{% endblock %}
 {% block body %}
-    <div class="row">
-        {{ form_start(form, {'action' : path('user_create')}) }}
-            {{ form_widget(form) }}
-
+        <section class="main-section">
+            {{ form_start(form, {'action' : path('user_create')}) }}
+            <div class="row mb-4">
+                <div class="col-12">
+                    <a href="{{ path('user_list') }}" class="text-small float-right"><i class="fa fa-chevron-left"></i> Retour à la
+                        liste des utilisateurs</a>
+                    <h1> Nouvel utilisateur</h1>
+                </div>
+            </div>
+            {% include 'user/_user_form.html.twig' %}
             <button type="submit" class="btn btn-success pull-right">Ajouter</button>
-        {{ form_end(form) }}
-    </div>
+            {{ form_end(form) }}
+        </section>
 {% endblock %}

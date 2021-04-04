@@ -1,18 +1,55 @@
 <?php
 
-namespace Tests\AppBundle\Controller;
+namespace App\Tests\Controller;
 
+use App\DataFixtures\UserFixture;
+use App\Repository\UserRepository;
+use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class DefaultControllerTest extends WebTestCase
 {
-    public function testIndex()
+    use FixturesTrait;
+
+    private $client;
+
+    public function setUp():void
     {
-        $client = static::createClient();
+        $this->client = static::createClient();
+        $this->loadFixtures([UserFixture::class]);
+        $userRepository = self::$container->get(UserRepository::class);
+        $this->user     = $userRepository->findOneBy(['email' => 'userone@todoandco.com']);
+        $this->admin    = $userRepository->findOneBy(['email' => 'admin@todoandco.com']);
+    }
 
-        $crawler = $client->request('GET', '/');
+    public function testRedirectToLogin()
+    {
+        $this->client->request('GET', '/');
+        $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertContains('Welcome to Symfony', $crawler->filter('#container h1')->text());
+    }
+
+    public function testAuthenticatedUserAccessHome()
+    {
+        $this->client->loginUser($this->user);
+        $this->client->request('GET', '/');
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+    }
+
+    public function testAdminHasUserMenu()
+    {
+        $this->client->loginUser($this->admin);
+        $crawler = $this->client->request('GET', '/');
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->assertSelectorExists('#user_menu');
+    }
+
+    public function testUserHasNotUserMenu()
+    {
+        $this->client->loginUser($this->user);
+        $crawler = $this->client->request('GET', '/');
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->assertSelectorNotExists('#user_menu');
     }
 }

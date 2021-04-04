@@ -4,6 +4,10 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
+use App\Manager\UserManager;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Liip\ImagineBundle\Imagine\Cache\CacheManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,7 +21,10 @@ class UserController extends AbstractController
      */
     public function list(): response
     {
-        return $this->render('user/list.html.twig', ['users' => $this->getDoctrine()->getRepository('App:User')->findAll()]);
+        return $this->render(
+            'user/list.html.twig',
+            ['users' => $this->getDoctrine()->getRepository('App:User')->findAll()]
+        );
     }
 
     /**
@@ -33,14 +40,21 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
 
-            //$oldAvatar = $user->getAvatar();
-            //$avatarFile = $form['avatar']->getData();
-            $em = $this->getDoctrine()->getManager();
-            $password = $encoder->encodePassword($user, $user->getPassword());
+            $avatarFile = $form['avatar']->getData();
+            if ($avatarFile) {
+                $filename = md5($user->getEmail()).'.'.$avatarFile->guessExtension();
+                $avatarFile->move(
+                    $this->getParameter('app.user.avatar_dir'),
+                    $filename
+                );
+                $user->setAvatar($filename);
+            }
+
+            $password      = $encoder->encodePassword($user, $user->getPassword());
             $user->setPassword($password);
             $user->setRoles($form->get('roles')->getData());
-            $em->persist($user);
-            $em->flush();
+            $entityManager->persist($user);
+            $entityManager->flush();
 
             $this->addFlash('success', "L'utilisateur a bien été ajouté.");
 
@@ -53,15 +67,31 @@ class UserController extends AbstractController
     /**
      * @Route("/users/{id}/edit", name="user_edit")
      */
-    public function edit(User $user, Request $request, UserPasswordEncoderInterface $encoder)
+    public function edit(User $user, Request $request, UserPasswordEncoderInterface $encoder, CacheManager $imagineCacheManager, UserManager $userManager)
     {
         $form = $this->createForm(UserType::class, $user);
-
+        $password = $user->getPassword();
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $password = $encoder->encodePassword($user, $user->getPassword());
             $user->setPassword($password);
+            if ($user->getPassword()) {
+                $password = $encoder->encodePassword($user, $user->getPassword());
+                $user->setPassword($password);
+            }
+
+            $avatarFile = $form['avatar']->getData();
+            if ($avatarFile) {
+                $filename = md5($user->getEmail()).'.'.$avatarFile->guessExtension();
+                $avatarFile->move(
+                    $this->getParameter('app.user.avatar_dir'),
+                    $filename
+                );
+                $user->setAvatar($filename);
+                $imagineCacheManager->remove('img/profile/'.$filename);
+            }
+
+            $user->setMobileNumber($userManager->formatMobileNumber($user->getMobileNumber()));
             $user->setRoles($form->get('roles')->getData());
             $this->getDoctrine()->getManager()->flush();
 
@@ -71,5 +101,23 @@ class UserController extends AbstractController
         }
 
         return $this->render('user/edit.html.twig', ['form' => $form->createView(), 'user' => $user]);
+    }
+
+    /**
+     * @Route("/users/{id}/delete", name="user_delete")
+     */
+    public function delete(User $user, EntityManagerInterface $entityManager, UserManager $userManager)
+    {
+        if (!$userManager->hasRightToDeleteUser($this->getUser(), $user)) {
+            $this->addFlash('danger', "Vous n'avez pas le droit de supprimer cet utilisateur");
+
+            return $this->redirectToRoute('user_list');
+        }
+
+        $entityManager->remove($user);
+        $entityManager->flush();
+        $this->addFlash('success', "L'utilisateur a bien été supprimé");
+
+        return $this->redirectToRoute('user_list');
     }
 }
