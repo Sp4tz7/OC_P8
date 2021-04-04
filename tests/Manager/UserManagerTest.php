@@ -30,7 +30,7 @@ class UserManagerTest extends TestCase
         $this->userManager = new UserManager($manager, $encoder);
     }
 
-    public function testHasRightToDelete()
+    public function testhasRightToDeleteTask()
     {
         $admin = new User();
         $admin->setRoles(['ROLE_ADMIN']);
@@ -46,53 +46,82 @@ class UserManagerTest extends TestCase
 
         $this->assertSame(
             true,
-            $this->userManager->hasRightToDelete($user, $task),
+            $this->userManager->hasRightToDeleteTask($user, $task),
             "User can delete user task"
         );
         $this->assertSame(
             false,
-            $this->userManager->hasRightToDelete($admin, $task),
+            $this->userManager->hasRightToDeleteTask($admin, $task),
             "Admin can't delete user task"
         );
         $this->assertSame(
             false,
-            $this->userManager->hasRightToDelete($anonymous, $task),
+            $this->userManager->hasRightToDeleteTask($anonymous, $task),
             "Anonymous can't delete user task"
         );
 
         $task->setCreatedBy($admin);
         $this->assertSame(
             false,
-            $this->userManager->hasRightToDelete($user, $task),
+            $this->userManager->hasRightToDeleteTask($user, $task),
             "User can't delete admin task"
         );
         $this->assertSame(
             true,
-            $this->userManager->hasRightToDelete($admin, $task),
+            $this->userManager->hasRightToDeleteTask($admin, $task),
             "Admin can delete admin task"
         );
         $this->assertSame(
             false,
-            $this->userManager->hasRightToDelete($anonymous, $task),
+            $this->userManager->hasRightToDeleteTask($anonymous, $task),
             "Anonymous can't delete admin task"
         );
 
         $task->setCreatedBy($anonymous);
         $this->assertSame(
             false,
-            $this->userManager->hasRightToDelete($user, $task),
+            $this->userManager->hasRightToDeleteTask($user, $task),
             "User can't delete Anonymous task"
         );
         $this->assertSame(
             true,
-            $this->userManager->hasRightToDelete($admin, $task),
+            $this->userManager->hasRightToDeleteTask($admin, $task),
             "Admin can delete Anonymous task"
         );
         $this->assertSame(
             false,
-            $this->userManager->hasRightToDelete($anonymous, $task),
+            $this->userManager->hasRightToDeleteTask($anonymous, $task),
             "Anonymous can't delete Anonymous task"
         );
+    }
+    public function testHasRightToDeleteUser()
+    {
+        $admin = new User();
+        $admin->setRoles(['ROLE_ADMIN']);
+
+        $anonymous = new User();
+        $anonymous->setRoles(['ROLE_ANONYMOUS']);
+
+        $user = new User();
+        $user->setRoles(['ROLE_USER']);
+
+        $this->assertSame(
+            false,
+            $this->userManager->hasRightToDeleteUser($admin, $admin),
+            "Admin can't delete himself"
+        );
+        $this->assertSame(
+            false,
+            $this->userManager->hasRightToDeleteUser($admin, $anonymous),
+            "Admin can't delete user anonymous"
+        );
+        $this->assertSame(
+            true,
+            $this->userManager->hasRightToDeleteUser($admin, $user),
+            "Admin can delete user"
+        );
+
+
     }
 
     public function testFormatMobileNumberReturnOnlyDigits()

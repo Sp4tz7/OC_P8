@@ -112,8 +112,8 @@ class TaskController extends AbstractController
      */
     public function deleteTaskAction(Task $task, UserManager $userManager)
     {
-        if (!$userManager->hasRightTodelete($this->getUser(), $task)) {
-            $this->addFlash('error', 'Vous ne pouvez supprimer que vos propres tâches');
+        if (!$userManager->hasRightToDeleteTask($this->getUser(), $task)) {
+            $this->addFlash('danger', 'Vous ne pouvez supprimer que vos propres tâches');
 
             return $this->redirectToRoute('task_list', ['status' => 'all']);
         }

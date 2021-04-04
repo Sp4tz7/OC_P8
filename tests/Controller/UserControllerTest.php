@@ -58,4 +58,22 @@ class UserControllerTest extends WebTestCase
         $this->assertSelectorExists('.alert.alert-success');
     }
 
+    public function testAdminCanDeleteUser()
+    {
+        $this->client->loginUser($this->admin);
+        $this->client->request('GET', '/users/'.$this->userOne->getid().'/delete');
+        $this->assertResponseRedirects('/users');
+        $this->client->followRedirect();
+        $this->assertSelectorExists('.alert.alert-success');
+    }
+
+    public function testAdminCantDeleteUser()
+    {
+        $this->client->loginUser($this->admin);
+        $this->client->request('GET', '/users/'.$this->admin->getid().'/delete');
+        $this->assertResponseRedirects('/users');
+        $this->client->followRedirect();
+        $this->assertSelectorExists('.alert.alert-danger');
+    }
+
 }

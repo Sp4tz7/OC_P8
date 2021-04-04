@@ -106,16 +106,10 @@ class UserController extends AbstractController
     /**
      * @Route("/users/{id}/delete", name="user_delete")
      */
-    public function delete(User $user, EntityManagerInterface $entityManager)
+    public function delete(User $user, EntityManagerInterface $entityManager, UserManager $userManager)
     {
-        if ($user == $this->getUser()) {
-            $this->addFlash('danger', "Vous ne pouvez pas vous supprimer vous-même!");
-
-            return $this->redirectToRoute('user_list');
-        }
-
-        if ($user->getRoles()[0] == 'ROLE_ANONYMOUS') {
-            $this->addFlash('danger', "Vous ne pouvez pas supprimer l'utilisateur Anonyme!");
+        if (!$userManager->hasRightToDeleteUser($this->getUser(), $user)) {
+            $this->addFlash('danger', "Vous n'avez pas le droit de supprimer cet utilisateur");
 
             return $this->redirectToRoute('user_list');
         }

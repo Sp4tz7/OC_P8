@@ -75,7 +75,7 @@ class UserManager
         return is_numeric($number) ? $number : null;
     }
 
-    public function hasRightToDelete(User $user, Task $task): bool
+    public function hasRightToDeleteTask(User $user, Task $task): bool
     {
         if ('ROLE_ANONYMOUS' == $user->getRoles()[0]) {
             return false;
@@ -90,5 +90,20 @@ class UserManager
         }
 
         return false;
+    }
+
+    public function hasRightToDeleteUser(User $user, User $userToDelete): bool
+    {
+        if ($userToDelete === $user or $user->getRoles()[0] != 'ROLE_ADMIN') {
+
+            return false;
+        }
+
+        if ($userToDelete->getRoles()[0] == 'ROLE_ANONYMOUS') {
+
+            return false;
+        }
+
+        return true;
     }
 }
