@@ -2,12 +2,16 @@
 
 namespace App\Tests\Controller;
 
+use App\DataFixtures\UserFixture;
 use App\Repository\UserRepository;
+use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 
 class UserRepositoryTest extends KernelTestCase
 {
+    use FixturesTrait;
+
 
     /**
      * @var \Doctrine\ORM\EntityManager
@@ -20,6 +24,8 @@ class UserRepositoryTest extends KernelTestCase
     public function testFindByRoles()
     {
         self::bootKernel();
+        $this->loadFixtures([UserFixture::class]);
+
         $query = self::$container->get(UserRepository::class)->findByRoles('anonymous');
         $this->assertIsArray($query);
     }
