@@ -47,9 +47,39 @@ class User implements UserInterface
     private $roles = [];
 
     /**
-     * @ORM\OneToMany(targetEntity=Task::class, mappedBy="created_by", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Task::class, mappedBy="created_by", orphanRemoval=false)
      */
     private $tasks;
+
+    /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private $firstname;
+
+    /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private $lastname;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $date_of_birth;
+
+    /**
+     * @ORM\Column(type="string", length=15, nullable=true)
+     */
+    private $mobile_number;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $occupation;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $avatar;
 
     public function __construct()
     {
@@ -121,6 +151,82 @@ class User implements UserInterface
     public function getTasks(): Collection
     {
         return $this->tasks;
+    }
+
+    public function getFirstname(): ?string
+    {
+        return $this->firstname;
+    }
+
+    public function setFirstname(?string $firstname): self
+    {
+        $this->firstname = $firstname;
+
+        return $this;
+    }
+
+    public function getLastname(): ?string
+    {
+        return $this->lastname;
+    }
+
+    public function setLastname(?string $lastname): self
+    {
+        $this->lastname = $lastname;
+
+        return $this;
+    }
+
+    public function getDateOfBirth(): ?\DateTimeInterface
+    {
+        return $this->date_of_birth;
+    }
+
+    public function setDateOfBirth(?\DateTimeInterface $date_of_birth): self
+    {
+        $this->date_of_birth = $date_of_birth;
+
+        return $this;
+    }
+
+    public function getMobileNumber(): ?string
+    {
+        return $this->mobile_number;
+    }
+
+    public function setMobileNumber(?string $mobile_number): self
+    {
+        $this->mobile_number = $mobile_number;
+
+        return $this;
+    }
+
+    public function getOccupation(): ?string
+    {
+        return $this->occupation;
+    }
+
+    public function setOccupation(?string $occupation): self
+    {
+        $this->occupation = $occupation;
+
+        return $this;
+    }
+
+    public function getAvatar(): ?string
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar(?string $avatar): self
+    {
+        $this->avatar = $avatar;
+
+        return $this;
+    }
+
+    public function __toString(){
+        return $this->firstname .' '.$this->lastname;
     }
 
 }

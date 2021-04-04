@@ -3,11 +3,9 @@
 namespace App\Tests\Controller;
 
 use App\DataFixtures\UserFixture;
-use App\Repository\TaskRepository;
 use App\Repository\UserRepository;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpFoundation\Response;
 
 class UserControllerTest extends WebTestCase
 {
@@ -58,6 +56,24 @@ class UserControllerTest extends WebTestCase
         $this->assertResponseRedirects('/users');
         $this->client->followRedirect();
         $this->assertSelectorExists('.alert.alert-success');
+    }
+
+    public function testAdminCanDeleteUser()
+    {
+        $this->client->loginUser($this->admin);
+        $this->client->request('GET', '/users/'.$this->userOne->getid().'/delete');
+        $this->assertResponseRedirects('/users');
+        $this->client->followRedirect();
+        $this->assertSelectorExists('.alert.alert-success');
+    }
+
+    public function testAdminCantDeleteUser()
+    {
+        $this->client->loginUser($this->admin);
+        $this->client->request('GET', '/users/'.$this->admin->getid().'/delete');
+        $this->assertResponseRedirects('/users');
+        $this->client->followRedirect();
+        $this->assertSelectorExists('.alert.alert-danger');
     }
 
 }

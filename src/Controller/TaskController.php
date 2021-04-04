@@ -6,6 +6,7 @@ use App\Entity\Task;
 use App\Form\TaskType;
 use App\Manager\UserManager;
 use App\Repository\TaskRepository;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,10 +17,8 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks/{status}", name="task_list", requirements={"status": "done|todo|mine|all"})
      */
-    public function listAction(TaskRepository $taskRepository, Request $request, $status)
+    public function listAction(TaskRepository $taskRepository, UserRepository $userRepository, $status)
     {
-        $status = $request->get('status');
-
         switch ($status) {
             case 'done':
                 $tasks = $taskRepository->findBy(['isDone' => true]);
@@ -32,6 +31,17 @@ class TaskController extends AbstractController
                 break;
             default:
                 $tasks = $taskRepository->findAll();
+        }
+
+        // set non attributed tasks to anonymous
+        foreach ($tasks as $task) {
+            if (null === $task->getCreatedBy()) {
+                $entityManager = $this->getDoctrine()->getManager();
+                $userAnonnymous = $userRepository->findByRole('anonymous');
+                $task->setCreatedBy($userAnonnymous[0]);
+                $entityManager->persist($task);
+                $entityManager->flush();
+            }
         }
 
         return $this->render('task/list.html.twig', ['tasks' => $tasks]);
@@ -102,8 +112,8 @@ class TaskController extends AbstractController
      */
     public function deleteTaskAction(Task $task, UserManager $userManager)
     {
-        if (!$userManager->hasRightTodelete($this->getUser(), $task)) {
-            $this->addFlash('error', 'Vous ne pouvez supprimer que vos propres tâches');
+        if (!$userManager->hasRightToDeleteTask($this->getUser(), $task)) {
+            $this->addFlash('danger', 'Vous ne pouvez supprimer que vos propres tâches');
 
             return $this->redirectToRoute('task_list', ['status' => 'all']);
         }
