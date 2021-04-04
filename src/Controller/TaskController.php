@@ -37,7 +37,7 @@ class TaskController extends AbstractController
         foreach ($tasks as $task) {
             if (null === $task->getCreatedBy()) {
                 $entityManager = $this->getDoctrine()->getManager();
-                $userAnonnymous = $userRepository->findByRole('anonymous');
+                $userAnonnymous = $userRepository->findByRoles('anonymous');
                 $task->setCreatedBy($userAnonnymous[0]);
                 $entityManager->persist($task);
                 $entityManager->flush();
