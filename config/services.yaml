@@ -4,6 +4,8 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+    app.user.avatar_dir: '%kernel.project_dir%/public/img/profile'
+    app.user.avatar_url: '/img/profile/'
 
 services:
     # default configuration for services in *this* file
