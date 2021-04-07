@@ -22,23 +22,13 @@ body {
   position: relative;
 }
 
-.header-title h1,
-.header-title h2,
-.header-title span {
-  float: left;
-  margin-right: 5px;
-}
-
-.header-title img {
-  margin-top: -20px;
-}
-
 h1 {
   font-size: 1.3em;
   color: #1762a7;
 }
 
-h2, h3 {
+h2,
+h3 {
   font-size: 1em;
   color: #5e83a5;
   line-height: 1.6em;
@@ -92,6 +82,16 @@ td:last-child {
   font-size: 0.8rem;
 }
 
+.header-title h1,
+.header-title h2,
+.header-title span {
+  float: left;
+  margin-right: 5px;
+}
+
+.header-title img {
+  margin-top: -20px;
+}
 
 .btn-logout,
 .btn-action {
@@ -124,7 +124,6 @@ main {
 }
 
 .main-section {
-  /*display: flex;*/
   align-items: center;
   justify-content: space-around;
   flex-grow: 1;
@@ -157,7 +156,8 @@ a:hover {
   box-shadow: 0 1px 4px 0 #151b261a;
 }
 
-.card-header, .card-footer {
+.card-header,
+.card-footer {
   background-color: transparent;
   border: 0;
 }
@@ -179,11 +179,11 @@ a:hover {
 }
 
 .bg-success {
-  background-color: #1BBC9B !important;
+  background-color: #1bbc9b!important;
 }
 
 .bg-warning {
-  background-color: #F4D03F !important;
+  background-color: #f4d03f!important;
 }
 
 .header-title {
