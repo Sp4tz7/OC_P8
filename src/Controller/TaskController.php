@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 class TaskController extends AbstractController
 {
@@ -27,7 +28,7 @@ class TaskController extends AbstractController
                 $tasks = $taskRepository->findBy(['isDone' => false]);
                 break;
             case 'mine':
-                $tasks = $taskRepository->findBy(['created_by' => $this->getUser()]);
+                $tasks = $taskRepository->findByUser($this->getUser());
                 break;
             default:
                 $tasks = $taskRepository->findAll();
@@ -37,7 +38,7 @@ class TaskController extends AbstractController
         foreach ($tasks as $task) {
             if (null === $task->getCreatedBy()) {
                 $entityManager = $this->getDoctrine()->getManager();
-                $userAnonnymous = $userRepository->findByRole('anonymous');
+                $userAnonnymous = $userRepository->findByRoles('anonymous');
                 $task->setCreatedBy($userAnonnymous[0]);
                 $entityManager->persist($task);
                 $entityManager->flush();
@@ -97,14 +98,23 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks/{id}/toggle", name="task_toggle")
      */
-    public function toggleTaskAction(Task $task)
+    public function toggleTaskAction(Task $task, Request $request)
     {
         $task->toggle(!$task->isDone());
         $this->getDoctrine()->getManager()->flush();
 
-        $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
+        $this->addFlash('success', sprintf(
+            'La tâche %s a bien été marquée comme %s.',
+            $task->getTitle(),
+            $task->isDone()?'faite':'non faite'
+        ));
 
-        return $this->redirectToRoute('task_list', ['status' => 'all']);
+        $referer = filter_var($request->headers->get('referer'), FILTER_SANITIZE_URL);
+        if (!\is_string($referer) || !$referer) {
+            throw new RouteNotFoundException('Referer is not valid');
+        }
+
+        return $this->redirect($referer);
     }
 
     /**

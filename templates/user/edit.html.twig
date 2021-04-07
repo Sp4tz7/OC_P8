@@ -2,16 +2,18 @@
 
 {% block title %}{{ user.username }}{% endblock %}
 
+{% block page_header %}{% set avatar = user.avatar? user.avatar: 'default_avatar.png' %}
+    <img src="{{ absolute_url(asset(avatar_img_url~ avatar )) |imagine_filter('avatar_thumb') }}"
+         class="img rounded-circle float-right"/>  {{ parent() }}  <h2><a href="{{ path('user_list') }}"> Liste des
+        utilisateurs </a></h2> <h2>{{ user.firstname ~ ' ' ~ user.lastname }}</h2>
+{% endblock %}
+
 {% block body %}
     <section class="main-section">
         {{ form_start(form, {'action' : path('user_edit', {'id' : user.id})}) }}
         <div class="row mb-4">
             <div class="col-12">
-                <a href="{{ path('user_list') }}" class="text-small float-right"><i class="fa fa-chevron-left"></i> Retour à la
-                    liste des utilisateurs</a>
-                {% set avatar = user.avatar? user.avatar: 'default_avatar.png' %}
-               <h1> <img src="{{ absolute_url(asset(avatar_img_url~ avatar )) |imagine_filter('avatar_thumb') }}"
-                     class="img rounded-circle"/> {{ user.firstname ~ ' ' ~ user.lastname }}</h1>
+
             </div>
         </div>
         {% include 'user/_user_form.html.twig' %}

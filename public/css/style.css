@@ -22,19 +22,58 @@ body {
   position: relative;
 }
 
+.header-title h1,
+.header-title h2,
+.header-title span {
+  float: left;
+  margin-right: 5px;
+}
+
+.header-title img {
+  margin-top: -20px;
+}
+
 h1 {
-  font-size: 1.5em;
-  color: #0f5474;
+  font-size: 1.3em;
+  color: #1762a7;
+}
+
+h2, h3 {
+  font-size: 1em;
+  color: #5e83a5;
+  line-height: 1.6em;
+}
+
+h2:before {
+  border-style: solid;
+  border-width: 0.15em 0.15em 0 0;
+  content: '';
+  display: inline-block;
+  height: 0.5em;
+  left: 0.15em;
+  position: relative;
+  top: 0.5em;
+  transform: rotate(45deg);
+  vertical-align: top;
+  width: 0.5em;
+  margin-right: 1em;
+}
+
+li {
+  font-size: 0.8em;
 }
 
 thead {
-  background-color: #1762a7;
-  color: #fff;
-  font-size: 14px;
+  color: #1762a7;
+  font-size: 12px;
 }
 
 table tr td {
   font-size: 0.8em;
+}
+
+.table thead th {
+  font-weight: 500;
 }
 
 i {
@@ -49,10 +88,16 @@ td:last-child {
   background-color: #7aa7e40d;
 }
 
-.btn-logout {
+.dropdown-item {
+  font-size: 0.8rem;
+}
+
+
+.btn-logout,
+.btn-action {
   color: white;
   background-color: #1762a7;
-  padding: 0.75rem 1.5rem;
+  padding: 0.55rem 1.3rem;
   border-radius: 0.5rem;
   text-decoration: none;
   font-size: 0.9rem;
@@ -61,14 +106,25 @@ td:last-child {
   cursor: pointer;
 }
 
+.btn-action {
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+}
+
 main {
   min-height: 90vh;
   background-color: #fff;
-  padding: 3em 0;
+  padding-bottom: 3em;
+}
+
+.login-content {
+  max-width: 50%;
+  margin: auto;
+  margin-top: 50px;
 }
 
 .main-section {
-  display: flex;
+  /*display: flex;*/
   align-items: center;
   justify-content: space-around;
   flex-grow: 1;
@@ -76,9 +132,7 @@ main {
 
 .main-section .covers-image {
   width: 60vw;
-  margin-left: 2rem;
   height: auto;
-  max-width: 600px;
 }
 
 a {
@@ -93,6 +147,27 @@ a:hover {
   font-size: 0.7em;
 }
 
+.card {
+  border-color: #e8ecee;
+  box-shadow: 0 1px 4px 0 #151b2614;
+}
+
+.card:hover {
+  border-color: #cbd4db;
+  box-shadow: 0 1px 4px 0 #151b261a;
+}
+
+.card-header, .card-footer {
+  background-color: transparent;
+  border: 0;
+}
+
+.card h5 {
+  font-size: 1rem;
+  min-height: 2.8em;
+}
+
+
 .btn-logout:hover {
   color: white;
   background-color: #0f5474;
@@ -101,6 +176,22 @@ a:hover {
 .bg-night {
   background-color: #2d6497;
   border: 2px solid #0f5474;
+}
+
+.bg-success {
+  background-color: #1BBC9B !important;
+}
+
+.bg-warning {
+  background-color: #F4D03F !important;
+}
+
+.header-title {
+  width: 100%;
+  background-color: #f6f8f9;
+  margin: 0 0 1.5em 0;
+  padding: 2em 2em 3em 2em;
+
 }
 
 .text-purple {

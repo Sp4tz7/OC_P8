@@ -46,6 +46,11 @@ class Task
      */
     private $created_by;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="assigned_tasks")
+     */
+    private $assigned_to;
+
     public function __construct()
     {
         $this->createdAt = new \Datetime();
@@ -105,6 +110,18 @@ class Task
     public function setCreatedBy(?User $created_by): self
     {
         $this->created_by = $created_by;
+
+        return $this;
+    }
+
+    public function getAssignedTo(): ?User
+    {
+        return $this->assigned_to;
+    }
+
+    public function setAssignedTo(?User $assigned_to): self
+    {
+        $this->assigned_to = $assigned_to;
 
         return $this;
     }
