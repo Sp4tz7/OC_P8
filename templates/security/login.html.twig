@@ -1,10 +1,15 @@
 {% extends 'base.html.twig' %}
 {% block header_img %}
 {% endblock %}
+{% block page_header %} {{ parent() }} <h2>Login</h2>
+
+{% endblock %}
+
+
 {% block body %}
-    <section class="main-section">
+    <section class="main-section login-content text-center">
         <h1>Connexion</h1>
-        <div class="bg-night p-5 rounded">
+        <div class="bg-night p-5 rounded mt-5 ">
             {% if error %}
                 <p class="alert alert-danger"
                    role="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</p>

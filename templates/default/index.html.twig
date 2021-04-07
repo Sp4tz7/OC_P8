@@ -1,11 +1,55 @@
 {% extends 'base.html.twig' %}
-
+ {% block header_box %}{% endblock %}
 {% block body %}
     <section class="main-section">
-        <div class="call-to-action">
-            <h1>Bienvenue sur Todo List</h1>
-            <p>l'application vous permettant de gérer l'ensemble de vos tâches sans effort !</p>
+        <div class="row pt-5">
+            <div class="col-md-6">
+                <div class="call-to-action">
+                    <h1>Bienvenue sur Todo List</h1>
+                    <p>l'application vous permettant de gérer l'ensemble de vos tâches sans effort !</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <img class="covers-image rounded img-fluid" src="{{ asset('img/todolist_homepage.jpg') }}"
+                     alt="ToDo And CO">
+            </div>
         </div>
-        <img class="covers-image rounded img-fluid" src="{{ asset('img/todolist_homepage.jpg') }}" alt="ToDo And CO">
+        <div class="row mt-5">
+            {% if tasks %}
+
+                <div class="cards">
+                    <h3>Aperçu de mes tâches à faire</h3>
+                    {% for task in tasks %}
+                        {% if not task.isDone %}
+                            {% set color = 'warning' %}
+                            {% set todo = 'thumbs-up text-success' %}
+                            {% set status = 'far fa-check-circle' %}
+                            {% if task.isDone %}
+                                {% set color = 'success' %}
+                                {% set todo = 'thumbs-down text-warning' %}
+                                {% set status = 'fas fa-check-circle text-success' %}
+                            {% endif %}
+                            <div class="card m-3 float-left" style="width: 15.75rem;">
+                                <div class="card-header"><span
+                                            class="float-right text-muted text-small">{{ task.createdat|date('d M') }}</span>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title text-muted"><i class="{{ status }}"></i>{{ task.title }}</h5>
+                                    <p class="card-text">
+                                </div>
+                                <div class="card-footer">
+                                    <a href="{{ path('task_edit', {'id' : task.id}) }}">
+                                        <i class="fa fa-edit text-info"></i></a>
+                                    <a href="{{ path('task_toggle', {'id' : task.id}) }}">
+                                        <i class="fa fa-{{ todo }} "></i></a>
+                                    <a href="{{ path('task_delete', {'id' : task.id}) }}">
+                                        <i class="fa fa-trash text-danger"></i></a>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
     </section>
 {% endblock %}
