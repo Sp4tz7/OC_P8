@@ -34,7 +34,7 @@ h3 {
   line-height: 1.6em;
 }
 
-h2:before {
+h2::before {
   border-style: solid;
   border-width: 0.15em 0.15em 0 0;
   content: '';
@@ -167,7 +167,6 @@ a:hover {
   min-height: 2.8em;
 }
 
-
 .btn-logout:hover {
   color: white;
   background-color: #0f5474;
@@ -179,11 +178,11 @@ a:hover {
 }
 
 .bg-success {
-  background-color: #1bbc9b!important;
+  background-color: #1bbc9b !important;
 }
 
 .bg-warning {
-  background-color: #f4d03f!important;
+  background-color: #f4d03f !important;
 }
 
 .header-title {
@@ -191,7 +190,6 @@ a:hover {
   background-color: #f6f8f9;
   margin: 0 0 1.5em 0;
   padding: 2em 2em 3em 2em;
-
 }
 
 .text-purple {
