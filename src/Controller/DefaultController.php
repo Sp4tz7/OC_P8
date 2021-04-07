@@ -14,8 +14,10 @@ class DefaultController extends AbstractController
      */
     public function index(TaskRepository $taskRepository): response
     {
-        $tasks = $taskRepository->findBy(['assigned_to' => $this->getUser()]);
-        return $this->render('default/index.html.twig',
-        ['tasks' => $tasks]);
+        $tasks = $taskRepository->findByUser($this->getUser());
+        return $this->render(
+            'default/index.html.twig',
+            ['tasks' => $tasks]
+        );
     }
 }
