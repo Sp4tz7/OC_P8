@@ -1,18 +1,14 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Nouvelle tâche{% endblock %}
-
+{% block page_header %}<a href="{{ path('task_list', {"status": "all"}) }}" class="text-small float-right"><i class="fa fa-chevron-left"></i> Retour à la
+    liste des tâches</a>{{ parent() }} <h2> Ajouter une tâche </h2>
+{% endblock %}
 {% block body %}
     <section class="main-section">
-        <h1>Créer une tâche</h1>
-        <div class="bg-night p-5 rounded">
-            {{ form_start(form, {'action' : path('task_create')}) }}
-            {{ form_widget(form) }}
-            <button type="submit" class="btn btn-success pull-right">Ajouter</button>
-            {{ form_end(form) }}
-            <p class="mt-3">
-                <a href="{{ path('task_list', {'status': 'all'}) }}" class="text-small"><i class="fa fa-chevron-left"></i> Retour à la liste des
-                    tâches</a></p>
-        </div>
+        {{ form_start(form, {'action' : path('task_create')}) }}
+        {% include 'task/_task_form.html.twig' %}
+        <button type="submit" class="btn btn-success pull-right">Ajouter</button>
+        {{ form_end(form) }}
     </section>
 {% endblock %}

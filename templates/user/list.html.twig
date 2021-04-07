@@ -2,16 +2,18 @@
 
 {% block title %}Liste des utilisateurs{% endblock %}
 
+{% block page_header %}{{ parent() }} <h2> Liste des utilisateurs</h2>{% endblock %}
+
 {% block body %}
-    <h1 class="text-primary"><i class="fas fa-users"></i> Liste des utilisateurs</h1>
     {% if users|length == 0 %}
         <div class="alert alert-warning" role="alert">
-            Il n'y a pas encore d'utilisateur enregistré. <a href="{{ path('user_create') }}" class="btn btn-warning pull-right">Créer un utilisateur</a>
+            Il n'y a pas encore d'utilisateur enregistré. <a href="{{ path('user_create') }}"
+                                                             class="btn btn-warning pull-right">Créer un utilisateur</a>
         </div>
     {% else %}
         <div class="row">
             <table class="table text-dark table-striped table-light table-hover mb-5">
-            <thead>
+                <thead>
                 <tr>
                     <th>#</th>
                     <th></th>
@@ -28,7 +30,9 @@
                     {% set avatar = user.avatar? user.avatar: 'default_avatar.png' %}
                     <tr>
                         <th scope="row">{{ user.id }}</th>
-                        <td><img class="img rounded-circle" src="{{ absolute_url(asset(avatar_img_url~ avatar )) |imagine_filter('avatar_thumb') }}"/> </td>
+                        <td><img class="img rounded-circle"
+                                 src="{{ absolute_url(asset(avatar_img_url~ avatar )) |imagine_filter('avatar_thumb') }}"/>
+                        </td>
                         <td>{{ user }}</td>
                         <td>{{ user.username }}</td>
                         <td>{{ user.email }}</td>
@@ -36,7 +40,8 @@
                         <td>{{ user.tasks|length }}</td>
                         <td>
                             <a href="{{ path('user_edit', {'id' : user.id}) }}"><i class="fa fa-edit text-info"></i></a>
-                            <a href="{{ path('user_delete', {'id' : user.id}) }}"><i class="fa fa-trash text-danger"></i></a>
+                            <a href="{{ path('user_delete', {'id' : user.id}) }}"><i
+                                        class="fa fa-trash text-danger"></i></a>
                         </td>
                     </tr>
                 {% endfor %}

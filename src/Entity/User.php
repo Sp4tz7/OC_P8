@@ -81,9 +81,15 @@ class User implements UserInterface
      */
     private $avatar;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Task::class, mappedBy="assigned_to")
+     */
+    private $assigned_tasks;
+
     public function __construct()
     {
         $this->tasks = new ArrayCollection();
+        $this->assigned_tasks = new ArrayCollection();
     }
 
     public function getId()
@@ -227,6 +233,36 @@ class User implements UserInterface
 
     public function __toString(){
         return $this->firstname .' '.$this->lastname;
+    }
+
+    /**
+     * @return Collection|Task[]
+     */
+    public function getAssignedTasks(): Collection
+    {
+        return $this->assigned_tasks;
+    }
+
+    public function addAssignedTask(Task $assignedTask): self
+    {
+        if (!$this->assigned_tasks->contains($assignedTask)) {
+            $this->assigned_tasks[] = $assignedTask;
+            $assignedTask->setAssignedTo($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAssignedTask(Task $assignedTask): self
+    {
+        if ($this->assigned_tasks->removeElement($assignedTask)) {
+            // set the owning side to null (unless already changed)
+            if ($assignedTask->getAssignedTo() === $this) {
+                $assignedTask->setAssignedTo(null);
+            }
+        }
+
+        return $this;
     }
 
 }
