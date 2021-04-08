@@ -69,6 +69,12 @@ class UserController extends AbstractController
      */
     public function edit(User $user, Request $request, UserPasswordEncoderInterface $encoder, CacheManager $imagineCacheManager, UserManager $userManager)
     {
+        if ('ROLE_ANONYMOUS' === $user->getRoles()[0]) {
+            $this->addFlash('danger', "L'utilisateur Anonyme ne peut pas être modifié");
+
+            return $this->redirectToRoute('user_list');
+        }
+
         $form = $this->createForm(UserType::class, $user);
         $password = $user->getPassword();
         $form->handleRequest($request);
@@ -93,6 +99,7 @@ class UserController extends AbstractController
 
             $user->setMobileNumber($userManager->formatMobileNumber($user->getMobileNumber()));
             $user->setRoles($form->get('roles')->getData());
+
             $this->getDoctrine()->getManager()->flush();
 
             $this->addFlash('success', "L'utilisateur a bien été modifié");
