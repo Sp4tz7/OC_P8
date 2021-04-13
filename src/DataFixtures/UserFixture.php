@@ -45,6 +45,7 @@ class UserFixture extends Fixture
             $this->faker->date(),
             $this->faker->phoneNumber,
             $this->faker->text(50),
+            null,
             $this->faker->image($this->container->getParameter('app.user.avatar_dir'))
         );
         $this->addReference(User::class.'_1', $user);
@@ -59,6 +60,7 @@ class UserFixture extends Fixture
             $this->faker->date(),
             $this->faker->phoneNumber,
             $this->faker->text(50),
+            null,
             $this->faker->image($this->container->getParameter('app.user.avatar_dir'))
         );
         $this->addReference(User::class.'_2', $user);
@@ -73,6 +75,7 @@ class UserFixture extends Fixture
             $this->faker->date(),
             $this->faker->phoneNumber,
             $this->faker->text(50),
+            null,
             $this->faker->image($this->container->getParameter('app.user.avatar_dir'))
         );
         $this->addReference(User::class.'_3', $user);
@@ -87,6 +90,7 @@ class UserFixture extends Fixture
             $this->faker->date(),
             $this->faker->phoneNumber,
             $this->faker->text(50),
+            null,
             $this->faker->image($this->container->getParameter('app.user.avatar_dir'))
         );
         $this->addReference(User::class.'_4', $user);
@@ -101,6 +105,7 @@ class UserFixture extends Fixture
             $this->faker->date(),
             $this->faker->phoneNumber,
             $this->faker->text(50),
+            null,
             $this->faker->image($this->container->getParameter('app.user.avatar_dir'))
         );
         $this->addReference(User::class.'_5', $user);
@@ -115,6 +120,7 @@ class UserFixture extends Fixture
             $this->faker->date(),
             $this->faker->phoneNumber,
             $this->faker->text(50),
+            null,
             $this->faker->image($this->container->getParameter('app.user.avatar_dir'))
         );
         $this->addReference(User::class.'_6', $user);

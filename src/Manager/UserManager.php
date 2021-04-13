@@ -40,6 +40,7 @@ class UserManager
         $birthDate,
         $mobileNumber,
         string $occupation,
+        $assigned_tasks = null,
         $avatar
     ): User {
         $user = new User();
@@ -54,6 +55,9 @@ class UserManager
         $user->setDateOfBirth($this->formatBirthDate($birthDate));
         $user->setMobileNumber($this->formatMobileNumber($mobileNumber));
         $user->setOccupation($occupation);
+        if (null !== $assigned_tasks) {
+            $user->addAssignedTask($assigned_tasks);
+        }
         $user->setAvatar($avatar);
         $this->manager->persist($user);
 
@@ -95,12 +99,10 @@ class UserManager
     public function hasRightToDeleteUser(User $user, User $userToDelete): bool
     {
         if ($userToDelete === $user or $user->getRoles()[0] != 'ROLE_ADMIN') {
-
             return false;
         }
 
         if ($userToDelete->getRoles()[0] == 'ROLE_ANONYMOUS') {
-
             return false;
         }
 

@@ -44,7 +44,7 @@ class TaskControllerTest extends WebTestCase
     public function testRedirectToLoginIfNotLoggedIn()
     {
         $this->client->request('GET', '/tasks/all');
-        $this->assertResponseRedirects('http://localhost/login');
+        $this->assertResponseRedirects('/login');
     }
 
     public function testUserTaskListActionWithTasks()
@@ -112,13 +112,24 @@ class TaskControllerTest extends WebTestCase
         $this->assertNull($task->getId());
     }
 
+
+
     public function testTaskToggleStatus()
     {
         $this->client->loginUser($this->user);
         $task = $this->tasksFromUserOne;
         $done = $task->isDone();
-        $this->client->request('POST', '/tasks/'.$task->getId().'/toggle');
+        $this->client->request('POST', '/tasks/'.$task->getId().'/toggle', [], [], ['HTTP_REFERER' => 'http//localhost/tasks/all']);
         $this->assertNotEquals($task->isDone(), $done);
+        $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
+    }
+
+    public function testNoRefererToggleTaskAction()
+    {
+        $this->client->loginUser($this->user);
+        $task = $this->tasksFromUserOne;
+        $this->client->request('POST', '/tasks/'.$task->getId().'/toggle');
+        $this->assertResponseStatusCodeSame(Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**
@@ -154,5 +165,4 @@ class TaskControllerTest extends WebTestCase
         $this->client->followRedirect();
         $this->assertSelectorExists('.alert.alert-success');
     }
-
 }

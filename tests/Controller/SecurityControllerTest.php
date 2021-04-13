@@ -46,39 +46,39 @@ class SecurityControllerTest extends WebTestCase
 
     public function testLoginWithWrongCredentials()
     {
-        $this->client->request('POST', '/login_check', [
+        $this->client->request('POST', '/login', [
             '_username'   => 'Admin',
             '_password'   => 'admin',
             '_csrf_token' => $this->tokenManager->getToken('authenticate'),
         ]);
-        $this->assertResponseRedirects('http://localhost/login', 302);
+        $this->assertResponseRedirects('/login', 302);
         $this->client->followRedirect();
         $this->assertSelectorExists('.alert.alert-danger');
     }
 
     public function testLoginWithCorrectCredentials()
     {
-        $this->client->request('POST', '/login_check', [
+        $this->client->request('POST', '/login', [
             '_username'   => 'UserOne',
             '_password'   => 'user1_todoandco',
             '_csrf_token' => $this->tokenManager->getToken('authenticate'),
         ]);
-        $this->assertResponseRedirects('http://localhost/', 302);
+        $this->assertResponseRedirects('/login', 302);
     }
 
     public function testLoginCheck()
     {
-        $this->client->request('GET', '/login_check');
-        $this->assertResponseStatusCodeSame(Response::HTTP_INTERNAL_SERVER_ERROR);
+        $this->client->request('GET', '/login');
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->assertSelectorExists('form');
     }
 
-    /**
-     * @covers \App\Controller\SecurityController::logoutCheck
-     */
-    public function testLogoutCheck()
+
+    public function testLogout()
     {
         $this->client->request('GET', '/logout');
         $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
+        $this->assertResponseRedirects('/login', 302);
         $this->client->followRedirect();
         $this->assertSelectorExists('form');
     }
