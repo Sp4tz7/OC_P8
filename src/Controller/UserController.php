@@ -30,7 +30,7 @@ class UserController extends AbstractController
     /**
      * @Route("/users/create", name="user_create")
      */
-    public function create(Request $request, UserPasswordEncoderInterface $encoder)
+    public function create(Request $request, UserPasswordEncoderInterface $encoder, UserManager $userManager)
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
@@ -53,6 +53,8 @@ class UserController extends AbstractController
             $password      = $encoder->encodePassword($user, $user->getPassword());
             $user->setPassword($password);
             $user->setRoles($form->get('roles')->getData());
+            $user->setDateOfBirth($userManager->formatBirthDate($user->getDateOfBirth()));
+            $user->setMobileNumber($userManager->formatMobileNumber($user->getMobileNumber()));
             $entityManager->persist($user);
             $entityManager->flush();
 
@@ -96,7 +98,7 @@ class UserController extends AbstractController
                 $user->setAvatar($filename);
                 $imagineCacheManager->remove('img/profile/'.$filename);
             }
-
+            $user->setDateOfBirth($userManager->formatBirthDate($user->getDateOfBirth()));
             $user->setMobileNumber($userManager->formatMobileNumber($user->getMobileNumber()));
             $user->setRoles($form->get('roles')->getData());
 

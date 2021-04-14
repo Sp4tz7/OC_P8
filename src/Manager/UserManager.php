@@ -66,7 +66,9 @@ class UserManager
 
     public function formatBirthDate($date)
     {
-        $date = new \DateTime($date);
+        if (!$date instanceof \DateTime) {
+            $date = new \DateTime($date);
+        }
 
         return $date;
     }
@@ -75,7 +77,7 @@ class UserManager
     {
         // Allow only Digits, remove all other characters.
         $number = preg_replace("/[^\d]/", "", $number);
-
+        $number = substr($number, 0, 15);
         return is_numeric($number) ? $number : null;
     }
 
