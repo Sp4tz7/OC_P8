@@ -1,49 +1,49 @@
 <header class="container-fluid">
     <div class="container">
         <nav class="navbar navbar-expand-lg navbar-dark ">
-            <a class="navbar-brand" href="{{ path('homepage') }}"><img src="{{ asset('img/logo.jpg') }}" alt="To Do List app"></a>
+            <a class="navbar-brand" href="{{ path('homepage') }}"><img src="{{ asset('img/logo.jpg') }}"
+                                                                       alt="To Do List app"></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             {% if app.user %}
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto">
-                    {% if is_granted('ROLE_ADMIN') %}
-                        <li class="nav-item dropdown" id="user_menu">
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <li class="nav-item dropdown" id="user_menu">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Utilisateurs
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a href="{{ path('user_create') }}" class="dropdown-item">Créer une nouvel
+                                        utilisateur</a>
+                                    <a href="{{ path('user_list') }}" class="dropdown-item">Consulter la liste des
+                                        utilisateurs</a>
+                                </div>
+                            </li>
+                        {% endif %}
+                        <li class="nav-item dropdown" id="task_menu">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Utilisateurs
-                            </a>
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Tâches </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a href="{{ path('user_create') }}" class="dropdown-item">Créer une nouvel
-                                    utilisateur</a>
-                                <div class="dropdown-divider"></div>
-                                <a href="{{ path('user_list') }}" class="dropdown-item">Consulter la liste des
-                                    utilisateurs</a>
+                                <a href="{{ path('task_create') }}" class="dropdown-item">Créer une nouvelle tâche</a>
+                                <a href="{{ path('task_list', {'status': 'todo'}) }}" class="dropdown-item">Consulter la
+                                    liste des tâches à
+                                    faire</a>
+                                <a href="{{ path('task_list', {'status': 'done'}) }}" class="dropdown-item">Consulter la
+                                    liste des tâches terminées</a>
+                                <a href="{{ path('task_list', {'status': 'mine'}) }}" class="dropdown-item">Consulter
+                                    mes tâches</a>
                             </div>
                         </li>
+                    </ul>
+                    {% if app.user %}
+                        <a href="{{ path('app_logout') }}" class="pull-right btn btn-logout mb-3 mb-md-0 ml-md-3">Se
+                            déconnecter</a>
                     {% endif %}
-                    <li class="nav-item dropdown" id="task_menu">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Tâches
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a href="{{ path('task_create') }}" class="dropdown-item">Créer une nouvelle tâche</a>
-                            <div class="dropdown-divider"></div>
-                            <a href="{{ path('task_list', {'status': 'todo'}) }}" class="dropdown-item">Consulter la liste des tâches à
-                                faire</a>
-                            <a href="{{ path('task_list', {'status': 'done'}) }}" class="dropdown-item">Consulter la liste des tâches terminées</a>
-                            <a href="{{ path('task_list', {'status': 'mine'}) }}" class="dropdown-item">Consulter mes tâches</a>
-                        </div>
-                    </li>
-                </ul>
-                {% if app.user %}
-                    <a href="{{ path('app_logout') }}" class="pull-right btn btn-logout mb-3 mb-md-0 ml-md-3">Se
-                        déconnecter</a>
-                {% endif %}
-            </div>
+                </div>
             {% endif %}
         </nav>
     </div>

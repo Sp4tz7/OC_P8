@@ -2,32 +2,27 @@
 
 {% block title %}{{ task.title }}{% endblock %}
 
-{% block page_header %}{{ parent() }} <a href="{{ path('task_list', {"status": "all"}) }}"
-                                         class="text-small float-right"><i class="fa fa-chevron-left"></i> Retour à la
-    liste des tâches</a><h2>  {{ task.title }}</h2>
+{% block page_header %}{{ parent() }}<h2><a href="{{ path('task_list', {"status": "all"}) }}"> Liste des tâches</a></h2><h2>  {{ task.title }}</h2>
 {% endblock %}
 
 {% block body %}
     <section class="main-section">
-        <div class="mb-5">
+        <div class="mb-3">
+            <span class="text-muted">Créé le {{ task.createdAt|date('d.m.Y') }} par {{ task.createdBy.username }}</span>
             {% if task.isDone %}
-                <span class="badge badge-success pull-right"><i class="fa fa-thumbs-up"></i> Terminée</span>
+                <span class="badge badge-success float-right float-sm-none"><i class="fa fa-thumbs-up"></i> Terminée</span>
             {% else %}
-                <span class="badge badge-warning pull-right"><i class="fa fa-thumbs-up"></i> A faire</span>
+                <span class="badge badge-warning float-right float-sm-none"><i class="fa fa-thumbs-up"></i> A faire</span>
             {% endif %}
-            <span class="text-muted float-right">Créé le {{ task.createdAt|date('d.m.Y') }} par {{ task.createdBy.username }}</span>
         </div>
-
-        {{ form_start(form, {'action' : path('task_edit', {"id": task.getId})}) }}
         <div class="row mb-4">
             <div class="col-12">
-
                 <h1>Ajouter une tâche</h1>
             </div>
         </div>
+        {{ form_start(form, {'action' : path('task_edit', {"id": task.getId})}) }}
         {% include 'task/_task_form.html.twig' %}
         <button type="submit" class="btn btn-success pull-right">Modifier</button>
         {{ form_end(form) }}
-
     </section>
 {% endblock %}

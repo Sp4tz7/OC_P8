@@ -7,8 +7,8 @@
 
 
 {% block body %}
-    <section class="main-section login-content text-center text-light">
-        <div class="bg-night p-5 rounded mt-5 ">
+    <section class="main-section login-content text-center">
+        <div class="p-5 rounded mt-5 ">
             {% if error %}
                 <p class="alert alert-danger"
                    role="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</p>
@@ -19,16 +19,13 @@
                         You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
                     </div>
                 {% endif %}
-
-                <h1 class="h3 mb-3 font-weight-normal text-light">Connexion</h1>
-                <label for="inputUsername">Nom d'utilisateur</label>
-                <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control" required autofocus>
-                <label for="inputPassword">Mot de passe</label>
+                <h1 class="h3 mb-3 font-weight-normal ">Connexion</h1>
+                <label for="inputUsername" class="text-muted">Nom d'utilisateur</label>
+                <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control"
+                       required autofocus>
+                <label for="inputPassword" class="text-muted mt-2">Mot de passe</label>
                 <input type="password" name="password" id="inputPassword" class="form-control" required>
-
-                <input type="hidden" name="_csrf_token"
-                       value="{{ csrf_token('authenticate') }}"
-                >
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
                 <button class="btn btn-lg btn-primary mt-3" type="submit">
                     Sign in
                 </button>

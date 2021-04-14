@@ -2,9 +2,8 @@
 
 {% block title %}Nouvel utilisateur{% endblock %}
 
-{% block page_header %}{{ parent() }}<a href="{{ path('user_list') }}" class="text-small float-right"><i
-            class="fa fa-chevron-left"></i> Retour à la
-    liste des utilisateurs</a><h2> Nouvel utilisateur</h2>
+{% block page_header %}{{ parent() }}<h2><a href="{{ path('user_list') }}"> Liste des
+        utilisateurs </a></h2><h2> Nouvel utilisateur</h2>
 {% endblock %}
 
 {% block body %}
