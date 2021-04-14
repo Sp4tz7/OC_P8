@@ -8,34 +8,27 @@
 
 {% block body %}
     <section class="main-section login-content text-center">
-        <h1>Connexion</h1>
-        <div class="bg-night p-5 rounded mt-5 ">
+        <div class="p-5 rounded mt-5 ">
             {% if error %}
                 <p class="alert alert-danger"
                    role="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</p>
             {% endif %}
-            <form action="{{ path('login_check') }}" method="post">
-                <div class="form-group">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"> <i class="fa fa-user"></i> </span>
-                        </div>
-                        <input type="text" id="username" class="form-control" name="_username"
-                               value="{{ last_username }}" placeholder="Email or login"/>
+            <form method="post">
+                {% if app.user %}
+                    <div class="mb-3">
+                        You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
                     </div>
-                </div>
-                <div class="form-group">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
-                        </div>
-                        <input type="password" class="form-control" id="password" name="_password"
-                               placeholder="******"/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary btn-block">Se connecter</button>
-                </div>
+                {% endif %}
+                <h1 class="h3 mb-3 font-weight-normal ">Connexion</h1>
+                <label for="inputUsername" class="text-muted">Nom d'utilisateur</label>
+                <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control"
+                       required autofocus>
+                <label for="inputPassword" class="text-muted mt-2">Mot de passe</label>
+                <input type="password" name="password" id="inputPassword" class="form-control" required>
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                <button class="btn btn-lg btn-primary mt-3" type="submit">
+                    Sign in
+                </button>
             </form>
         </div>
     </section>

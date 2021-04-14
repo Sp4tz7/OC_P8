@@ -1,8 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Nouvelle tâche{% endblock %}
-{% block page_header %}<a href="{{ path('task_list', {"status": "all"}) }}" class="text-small float-right"><i class="fa fa-chevron-left"></i> Retour à la
-    liste des tâches</a>{{ parent() }} <h2> Ajouter une tâche </h2>
+{% block page_header %}{{ parent() }} <h2><a href="{{ path('task_list', {"status": "all"}) }}"> Liste des tâches</a></h2><h2> Ajouter une tâche </h2>
 {% endblock %}
 {% block body %}
     <section class="main-section">

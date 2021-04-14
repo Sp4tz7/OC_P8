@@ -149,6 +149,7 @@ class UserManagerTest extends TestCase
             '25-12-2552',
             '098765213251',
             'Director',
+            null,
             null
         );
 

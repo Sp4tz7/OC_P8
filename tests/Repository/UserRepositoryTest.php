@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Controller;
+namespace App\Tests\Repository;
 
 use App\DataFixtures\UserFixture;
 use App\Repository\UserRepository;
