@@ -42,12 +42,13 @@ class Task
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="tasks")
-     * @ORM\JoinColumn(nullable=true, referencedColumnName="id", nullable=true, onDelete="SET NULL")
+     * @ORM\JoinColumn(nullable=true, referencedColumnName="id", onDelete="SET NULL")
      */
     private $created_by;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="assigned_tasks")
+     * @ORM\JoinColumn(nullable=true, referencedColumnName="id", onDelete="SET NULL")
      */
     private $assigned_to;
 
