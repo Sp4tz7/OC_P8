@@ -139,6 +139,7 @@ class UserManagerTest extends TestCase
 
     public function testCreateUser()
     {
+        $task = new Task();
         $user = $this->userManager->createUser(
             'Anonymous',
             'anonymous@todoandco.com',
@@ -149,7 +150,7 @@ class UserManagerTest extends TestCase
             '25-12-2552',
             '098765213251',
             'Director',
-            null,
+            $task,
             null
         );
 

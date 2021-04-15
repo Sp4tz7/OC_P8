@@ -51,6 +51,7 @@ class UserControllerTest extends WebTestCase
             'user[password][first]'  => 'newpassword',
             'user[password][second]' => 'newpassword',
             'user[roles]'            => 'ROLE_USER',
+            'user[avatar]'           => 'test',
         ]);
         $this->client->submit($form);
         $this->assertResponseRedirects('/users');
@@ -80,6 +81,15 @@ class UserControllerTest extends WebTestCase
     {
         $this->client->loginUser($this->admin);
         $this->client->request('GET', '/users/'.$this->anonymous->getid().'/delete');
+        $this->assertResponseRedirects('/users');
+        $this->client->followRedirect();
+        $this->assertSelectorExists('.alert.alert-danger');
+    }
+
+    public function testCantEditAnonymous()
+    {
+        $this->client->loginUser($this->admin);
+        $this->client->request('GET', '/users/'.$this->anonymous->getid().'/edit');
         $this->assertResponseRedirects('/users');
         $this->client->followRedirect();
         $this->assertSelectorExists('.alert.alert-danger');
