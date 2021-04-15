@@ -82,11 +82,10 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user->setPassword($password);
             if ($user->getPassword()) {
                 $password = $encoder->encodePassword($user, $user->getPassword());
-                $user->setPassword($password);
             }
+            $user->setPassword($password);
 
             $avatarFile = $form['avatar']->getData();
             if ($avatarFile) {
