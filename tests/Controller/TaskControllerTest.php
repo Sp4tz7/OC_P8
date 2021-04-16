@@ -71,9 +71,6 @@ class TaskControllerTest extends WebTestCase
         $this->assertSelectorNotExists('.fa-thumbs-down');
     }
 
-    /**
-     * @covers \App\Controller\TaskController::listAction
-     */
     public function testNoTodoTasksInDone()
     {
         $this->client->loginUser($this->user);

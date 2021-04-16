@@ -3,9 +3,11 @@
 namespace App\Tests\Controller;
 
 use App\DataFixtures\UserFixture;
+use App\Entity\User;
 use App\Repository\UserRepository;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class UserControllerTest extends WebTestCase
 {
@@ -13,6 +15,12 @@ class UserControllerTest extends WebTestCase
 
 
     private $userOne;
+    private $anonymous;
+    private $admin;
+    /**
+     * @var \Symfony\Bundle\FrameworkBundle\KernelBrowser
+     */
+    private $client;
 
     public function setUp(): void
     {
@@ -28,12 +36,17 @@ class UserControllerTest extends WebTestCase
     {
         $this->client->loginUser($this->admin);
         $crawler = $this->client->request('GET', '/users/create');
+        $uploadedFile = new UploadedFile(
+            __DIR__.'/../../public/img/profile/default_avatar.png',
+            'default_avatar.png'
+        );
         $form    = $crawler->filter('[name="user"]')->form([
             'user[username]'         => 'testUsernameMod',
             'user[email]'            => 'test@test.com',
             'user[password][first]'  => 'testpassword',
             'user[password][second]' => 'testpassword',
             'user[roles]'            => 'ROLE_USER',
+            'user[avatar]'           => $uploadedFile,
         ]);
         $this->client->submit($form);
         $this->assertResponseRedirects('/users');
@@ -45,13 +58,17 @@ class UserControllerTest extends WebTestCase
     {
         $this->client->loginUser($this->admin);
         $crawler = $this->client->request('GET', '/users/'.$this->userOne->getid().'/edit');
+        $uploadedFile = new UploadedFile(
+            __DIR__.'/../../public/img/profile/default_avatar.png',
+            'default_avatar.png'
+        );
         $form    = $crawler->filter('[name="user"]')->form([
             'user[username]'         => $this->userOne->getUsername(),
             'user[email]'            => $this->userOne->getEmail(),
             'user[password][first]'  => 'newpassword',
             'user[password][second]' => 'newpassword',
             'user[roles]'            => 'ROLE_USER',
-            'user[avatar]'           => 'test',
+            'user[avatar]'           => $uploadedFile,
         ]);
         $this->client->submit($form);
         $this->assertResponseRedirects('/users');
@@ -94,5 +111,4 @@ class UserControllerTest extends WebTestCase
         $this->client->followRedirect();
         $this->assertSelectorExists('.alert.alert-danger');
     }
-
 }

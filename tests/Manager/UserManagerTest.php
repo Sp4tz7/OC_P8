@@ -6,7 +6,10 @@ use App\Entity\Task;
 use App\Entity\User;
 use App\Manager\UserManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Liip\ImagineBundle\Imagine\Cache\CacheManager;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 
@@ -24,13 +27,18 @@ class UserManagerTest extends TestCase
 
     public function setUp(): void
     {
-        $manager = $this->getMockBuilder(EntityManagerInterface::class)->disableOriginalConstructor()->getMock();
-        $encoder = $this->getMockBuilder(UserPasswordEncoderInterface::class)->disableOriginalConstructor()->getMock();
+        $manager             = $this->getMockBuilder(EntityManagerInterface::class)->disableOriginalConstructor()
+            ->getMock();
+        $encoder             = $this->getMockBuilder(UserPasswordEncoderInterface::class)->disableOriginalConstructor()
+            ->getMock();
+        $container           = $this->getMockBuilder(ContainerInterface::class)->disableOriginalConstructor()
+            ->getMock();
+        $imagineCacheManager = $this->getMockBuilder(CacheManager::class)->disableOriginalConstructor()->getMock();
 
-        $this->userManager = new UserManager($manager, $encoder);
+        $this->userManager = new UserManager($manager, $encoder, $container, $imagineCacheManager);
     }
 
-    public function testhasRightToDeleteTask()
+    public function testHasRightToDeleteTask()
     {
         $admin = new User();
         $admin->setRoles(['ROLE_ADMIN']);
@@ -94,6 +102,7 @@ class UserManagerTest extends TestCase
             "Anonymous can't delete Anonymous task"
         );
     }
+
     public function testHasRightToDeleteUser()
     {
         $admin = new User();
@@ -120,8 +129,6 @@ class UserManagerTest extends TestCase
             $this->userManager->hasRightToDeleteUser($admin, $user),
             "Admin can delete user"
         );
-
-
     }
 
     public function testFormatMobileNumberReturnOnlyDigits()
@@ -151,9 +158,10 @@ class UserManagerTest extends TestCase
             '098765213251',
             'Director',
             $task,
-            null
+            '/public/img/profile/default_avatar.png'
         );
 
         $this->assertInstanceOf(User::class, $user);
     }
+
 }

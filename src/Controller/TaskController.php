@@ -5,10 +5,9 @@ namespace App\Controller;
 use App\Entity\Task;
 use App\Form\TaskType;
 use App\Manager\UserManager;
+use App\Manager\TaskManager;
 use App\Repository\TaskRepository;
-use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -18,7 +17,7 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks/{status}", name="task_list", requirements={"status": "done|todo|mine|all"})
      */
-    public function listAction(TaskRepository $taskRepository, UserRepository $userRepository, $status)
+    public function listAction(TaskRepository $taskRepository, TaskManager $taskManager, $status)
     {
         switch ($status) {
             case 'done':
@@ -35,15 +34,7 @@ class TaskController extends AbstractController
         }
 
         // set non attributed tasks to anonymous
-        foreach ($tasks as $task) {
-            if (null === $task->getCreatedBy()) {
-                $entityManager = $this->getDoctrine()->getManager();
-                $userAnonnymous = $userRepository->findByRoles('anonymous');
-                $task->setCreatedBy($userAnonnymous[0]);
-                $entityManager->persist($task);
-                $entityManager->flush();
-            }
-        }
+        $tasks = $taskManager->checkTaskAuthors($tasks);
 
         return $this->render('task/list.html.twig', ['tasks' => $tasks]);
     }

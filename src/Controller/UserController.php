@@ -42,12 +42,7 @@ class UserController extends AbstractController
 
             $avatarFile = $form['avatar']->getData();
             if ($avatarFile) {
-                $filename = md5($user->getEmail()).'.'.$avatarFile->guessExtension();
-                $avatarFile->move(
-                    $this->getParameter('app.user.avatar_dir'),
-                    $filename
-                );
-                $user->setAvatar($filename);
+                $user->setAvatar($userManager->uploadFile($user, $avatarFile));
             }
 
             $password      = $encoder->encodePassword($user, $user->getPassword());
@@ -69,7 +64,7 @@ class UserController extends AbstractController
     /**
      * @Route("/users/{id}/edit", name="user_edit")
      */
-    public function edit(User $user, Request $request, UserPasswordEncoderInterface $encoder, CacheManager $imagineCacheManager, UserManager $userManager)
+    public function edit(User $user, Request $request, UserPasswordEncoderInterface $encoder, UserManager $userManager)
     {
         if ('ROLE_ANONYMOUS' === $user->getRoles()[0]) {
             $this->addFlash('danger', "L'utilisateur Anonyme ne peut pas être modifié");
@@ -89,13 +84,7 @@ class UserController extends AbstractController
 
             $avatarFile = $form['avatar']->getData();
             if ($avatarFile) {
-                $filename = md5($user->getEmail()).'.'.$avatarFile->guessExtension();
-                $avatarFile->move(
-                    $this->getParameter('app.user.avatar_dir'),
-                    $filename
-                );
-                $user->setAvatar($filename);
-                $imagineCacheManager->remove('img/profile/'.$filename);
+                $user->setAvatar($userManager->uploadFile($user, $avatarFile));
             }
             $user->setDateOfBirth($userManager->formatBirthDate($user->getDateOfBirth()));
             $user->setMobileNumber($userManager->formatMobileNumber($user->getMobileNumber()));
