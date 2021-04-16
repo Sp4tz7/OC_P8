@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page not found{% endblock %}
+
+{% block body %}
+    <section id="page-section" class="page-classic">
+        <div class="page-section-inner tt-wrap">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12 no-padding margin-bottom-40">
+                        <div class="page-content">
+                            <div class="tt-heading tt-heading-lg">
+                                <div class="tt-heading-inner">
+                                    <h1 class="tt-heading-title">Oups! Cette page n'existe pas!</h1>
+                                </div>
+                            </div>
+                            <div class="margin-top-20">
+                                <p class="max-width-600">Ne partez pas si vite... Vous pouvez repartir depuis la page
+                                    d'accueil</p>
+                            </div>
+
+                            <div class="margin-top-30">
+                                <a href="{{ path('homepage') }}" class="btn btn-primary margin-top-5 margin-right-10">Aller
+                                    à l'accueil</a>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
