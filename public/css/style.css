@@ -184,6 +184,7 @@ a:hover {
 .card {
   border-color: #e8ecee;
   box-shadow: 0 1px 4px 0 #151b2614;
+  min-height: 230px;
 }
 
 .card:hover {
