@@ -5,6 +5,8 @@ namespace App\Manager;
 use App\Entity\Task;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Liip\ImagineBundle\Imagine\Cache\CacheManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserManager
@@ -17,17 +19,33 @@ class UserManager
      * @var UserPasswordEncoderInterface
      */
     private $encoder;
+    /**
+     * @var ContainerInterface
+     */
+    private $container;
+    /**
+     * @var CacheManager
+     */
+    private $imagineCacheManager;
 
     /**
      * UserManager constructor.
      *
      * @param EntityManagerInterface       $manager
      * @param UserPasswordEncoderInterface $passwordEncoder
+     * @param ContainerInterface           $container
+     * @param CacheManager                 $imagineCacheManager
      */
-    public function __construct(EntityManagerInterface $manager, UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(
+        EntityManagerInterface $manager,
+        UserPasswordEncoderInterface $passwordEncoder,
+        ContainerInterface $container,
+        CacheManager $imagineCacheManager)
     {
-        $this->manager = $manager;
-        $this->encoder = $passwordEncoder;
+        $this->manager             = $manager;
+        $this->encoder             = $passwordEncoder;
+        $this->container           = $container;
+        $this->imagineCacheManager = $imagineCacheManager;
     }
 
     public function createUser(
@@ -78,6 +96,7 @@ class UserManager
         // Allow only Digits, remove all other characters.
         $number = preg_replace("/[^\d]/", "", $number);
         $number = substr($number, 0, 15);
+
         return is_numeric($number) ? $number : null;
     }
 
@@ -109,5 +128,18 @@ class UserManager
         }
 
         return true;
+    }
+
+    public function uploadFile(User $user, $avatarFile, $destination = null)
+    {
+        $destination = $destination??$this->container->getParameter('app.user.avatar_dir');
+        $filename = md5($user->getEmail()).'.'.$avatarFile->guessExtension();
+        $avatarFile->move(
+            $destination,
+            $filename
+        );
+        $this->imagineCacheManager->remove('img/profile/'.$filename);
+
+        return $filename;
     }
 }
